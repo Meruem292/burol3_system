@@ -177,6 +177,7 @@ if (isset($_POST['btn_delete_blotter'])) {
 // Manage Voters
 // Handle adding a new voter
 if (isset($_POST['btn_add_voter'])) {
+    include('db.php');
     // Retrieve form data
     $voter_name = $_POST['voter_name'];
     $voter_age = $_POST['voter_age'];
