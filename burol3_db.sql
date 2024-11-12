@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2024 at 03:16 PM
+-- Generation Time: Nov 12, 2024 at 02:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,25 +52,24 @@ CREATE TABLE `announcements` (
   `title` varchar(255) NOT NULL,
   `body` text NOT NULL,
   `picture` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_archive` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `announcements`
 --
 
-INSERT INTO `announcements` (`id`, `title`, `body`, `picture`, `created_at`) VALUES
-(5, 'title23', 'body2', '2.jpg', '2024-10-20 03:42:08'),
-(6, 'title23', 'body2', '3.jpg', '2024-10-20 03:43:08'),
-(7, 'title', 'hello', '4.jpg', '2024-10-20 03:43:30'),
-(8, 'title', 'body', '5.jpg', '2024-10-20 03:43:53'),
-(9, 'title', 'body', '6.jpg', '2024-10-20 03:44:04'),
-(10, 'red', 'green', '7.jpg', '2024-10-20 03:44:25'),
-(11, 'green', 'green', '8.jpg', '2024-10-20 03:44:35'),
-(12, 'Paalala', 'paalala', '9.jpg', '2024-10-20 03:44:50'),
-(13, 'Paalala2', 'Paalala2', '10.jpg', '2024-10-20 03:45:08'),
-(14, 'Katanugan', 'Katanugan', '11.jpg', '2024-10-20 03:45:26'),
-(17, 'Tittle', 'Body', '11.jpg', '2024-10-25 04:05:43');
+INSERT INTO `announcements` (`id`, `title`, `body`, `picture`, `created_at`, `is_archive`) VALUES
+(5, 'title23', 'body2', '2.jpg', '2024-10-20 03:42:08', 0),
+(6, 'title23', 'body2', '3.jpg', '2024-10-20 03:43:08', 0),
+(7, 'title', 'hello', '4.jpg', '2024-10-20 03:43:30', 0),
+(8, 'title', 'body', '5.jpg', '2024-10-20 03:43:53', 0),
+(9, 'title', 'body', '6.jpg', '2024-10-20 03:44:04', 0),
+(10, 'red', 'green', '7.jpg', '2024-10-20 03:44:25', 0),
+(11, 'green', 'green', '8.jpg', '2024-10-20 03:44:35', 0),
+(12, 'Paalala', 'paalala', '9.jpg', '2024-10-20 03:44:50', 0),
+(13, 'Paalala2', 'Paalala2', '10.jpg', '2024-10-20 03:45:08', 0);
 
 -- --------------------------------------------------------
 
@@ -87,20 +86,21 @@ CREATE TABLE `blotter` (
   `reporter_name` varchar(255) NOT NULL,
   `accused_name` varchar(255) NOT NULL,
   `status` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_archive` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `blotter`
 --
 
-INSERT INTO `blotter` (`id`, `date`, `time`, `incident_type`, `description`, `reporter_name`, `accused_name`, `status`, `created_at`) VALUES
-(1, '2024-10-08', '16:03:00', 'Harrasment', 'The reporting individual was harassed by the accused at the front of reporter house.', 'Juan Dela Cruz', 'Pedro Matapang', 'Pending', '2024-10-20 08:03:31'),
-(2, '2024-10-20', '22:13:00', 'Stafa', 'Trying to dodge the collector.', 'Abdul Jhabar', 'Linda Luzvi', 'Pending', '2024-10-20 14:14:35'),
-(3, '2024-10-24', '23:13:00', 'Harrasment', 'Keep trying to call him Pogi.', 'Mherwen Wiel Romero', 'Jemie Mantillas', 'Pending', '2024-10-24 15:14:47'),
-(4, '2024-10-24', '23:18:00', 'Stafa', 'Barrowed money worth 1000 pesos, and keep dodging to pay.', 'WENNYL CALUMBA ROMERO', 'Jennalyn Malvar', 'Dismissed', '2024-10-24 15:20:04'),
-(5, '2024-10-24', '23:21:00', 'Harrasment', 'Posting defamation on social media.', 'WENNYL CALUMBA ROMERO', 'Jennalyn Malvar', 'Resolved', '2024-10-24 15:22:03'),
-(6, '2024-10-25', '11:30:00', 'Harrasment', 'Harassment Description.', 'WENNYL CALUMBA ROMERO', 'Linda Luzvi', 'Pending', '2024-10-25 03:32:09');
+INSERT INTO `blotter` (`id`, `date`, `time`, `incident_type`, `description`, `reporter_name`, `accused_name`, `status`, `created_at`, `is_archive`) VALUES
+(1, '2024-10-08', '16:03:00', 'Harrasment', 'The reporting individual was harassed by the accused at the front of reporter house.', 'Juan Dela Cruz', 'Pedro Matapang', 'Pending', '2024-10-20 08:03:31', 0),
+(2, '2024-10-20', '22:13:00', 'Stafa', 'Trying to dodge the collector.', 'Abdul Jhabar', 'Linda Luzvi', 'Pending', '2024-10-20 14:14:35', 0),
+(3, '2024-10-24', '23:13:00', 'Harrasment', 'Keep trying to call him Pogi.', 'Mherwen Wiel Romero', 'Jemie Mantillas', 'Pending', '2024-10-24 15:14:47', 0),
+(4, '2024-10-24', '23:18:00', 'Stafa', 'Barrowed money worth 1000 pesos, and keep dodging to pay.', 'WENNYL CALUMBA ROMERO', 'Jennalyn Malvar', 'Dismissed', '2024-10-24 15:20:04', 0),
+(5, '2024-10-24', '23:21:00', 'Harrasment', 'Posting defamation on social media.', 'WENNYL CALUMBA ROMERO', 'Jennalyn Malvar', 'Resolved', '2024-10-24 15:22:03', 0),
+(6, '2024-10-25', '11:30:00', 'Harrasment', 'Harassment Description.', 'WENNYL CALUMBA ROMERO', 'Linda Luzvi', 'Pending', '2024-10-25 03:32:09', 0);
 
 -- --------------------------------------------------------
 
@@ -125,26 +125,27 @@ CREATE TABLE `documents` (
   `control_number` varchar(255) NOT NULL,
   `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
   `delivery_mode` enum('pick-up','delivery') NOT NULL,
-  `amount_to_prepare` decimal(10,2) DEFAULT NULL
+  `amount_to_prepare` decimal(10,2) DEFAULT NULL,
+  `is_archive` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `documents`
 --
 
-INSERT INTO `documents` (`id`, `tracking_number`, `full_name`, `address`, `age`, `pickup_date`, `pickup_time`, `year_residency`, `purpose`, `category`, `note`, `type`, `status`, `control_number`, `date_added`, `delivery_mode`, `amount_to_prepare`) VALUES
-(20, 'BRGYB3-8WL-9OT-TEA-M57K', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'for delivery', 'Sample Request', 'Barangay Clearance', 'Approved', '479867', '2024-10-23 05:09:26', 'delivery', NULL),
-(21, 'BRGYB3-U1W-CDM-XZ9-N5X8', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '820391', '2024-10-23 05:14:51', 'delivery', NULL),
-(22, 'BRGYB3-MYW-11M-1DD-6YQP', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '997499', '2024-10-23 05:20:23', 'delivery', NULL),
-(24, 'BRGYB3-0AX-VKR-PC4-71NZ', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '588579', '2024-10-23 07:02:23', 'delivery', NULL),
-(25, 'BRGYB3-OGI-H4G-J2S-QDY9', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '25', '', '', '2024', 'Job seeking', 'brgy clearance', '', 'Barangay Clearance', 'Approved', '118559', '2024-10-24 08:00:14', 'delivery', NULL),
-(26, 'BRGYB3-ZRT-D8D-XRZ-X0OH', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '0', '', '', '2024', 'Job seeking', 'on request', 'Sample Request', 'Barangay Clearance', 'Approved', '379402', '2024-10-24 09:23:21', 'delivery', NULL),
-(27, 'BRGYB3-E6M-MF2-45H-464R', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '0', '2024-10-24', '18:40', '2024', 'Job seeking', 'on request', 'Sample Request', 'Barangay Clearance', 'Disapproved', '453950', '2024-10-24 09:40:16', 'pick-up', 25.00),
-(28, 'BRGYB3-AFC-91R-KB8-G292', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '2024-10-24', '20:19', '2024', 'Meds', 'on request', 'Sample Request', 'Barangay Clearance', 'Approved', '743824', '2024-10-24 12:19:15', 'pick-up', NULL),
-(29, 'BRGYB3-TIQ-FFV-WRS-67DG', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '2024-10-24', '20:21', '2024', 'Meds', 'on request', '', 'Barangay Clearance', 'Disapproved', '266076', '2024-10-24 12:21:48', 'pick-up', 25.00),
-(30, 'BRGYB3-1U6-RO7-QIG-CVC0', 'WENNYL CALUMBA ROMERO', 'JP RIZAL', '43', '2024-10-24', '20:23', '2024', 'meds', 'on request', '', 'Barangay Clearance', 'Pending', '120661', '2024-10-24 12:24:09', 'pick-up', 25.00),
-(31, 'BRGYB3-ZI8-HGG-0RV-VGUZ', 'WENNYL CALUMBA ROMERO', 'Blk D8 lot 20', '43', '2024-10-24', '20:38', '2024', 'Meds', 'for pick-up', 'Sample Request', 'Certificate of Indigency', 'Approved', '729905', '2024-10-24 12:38:33', 'pick-up', 100.00),
-(32, 'BRGYB3-O2Z-PRS-0F8-K7J8', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '', '', '2024', 'Loan', 'for delivery', '', 'Certificate of Residency', 'Approved', '276874', '2024-10-24 13:46:19', 'delivery', NULL);
+INSERT INTO `documents` (`id`, `tracking_number`, `full_name`, `address`, `age`, `pickup_date`, `pickup_time`, `year_residency`, `purpose`, `category`, `note`, `type`, `status`, `control_number`, `date_added`, `delivery_mode`, `amount_to_prepare`, `is_archive`) VALUES
+(20, 'BRGYB3-8WL-9OT-TEA-M57K', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'for delivery', 'Sample Request', 'Barangay Clearance', 'Approved', '479867', '2024-10-23 05:09:26', 'delivery', NULL, 0),
+(21, 'BRGYB3-U1W-CDM-XZ9-N5X8', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '820391', '2024-10-23 05:14:51', 'delivery', NULL, 0),
+(22, 'BRGYB3-MYW-11M-1DD-6YQP', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '997499', '2024-10-23 05:20:23', 'delivery', NULL, 0),
+(24, 'BRGYB3-0AX-VKR-PC4-71NZ', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '24', '', '', '2024', 'Job seeking', 'brgy clearance', 'Sample Request', 'Barangay Clearance', 'Approved', '588579', '2024-10-23 07:02:23', 'delivery', NULL, 0),
+(25, 'BRGYB3-OGI-H4G-J2S-QDY9', 'Mherwen Wiel Romero', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '25', '', '', '2024', 'Job seeking', 'brgy clearance', '', 'Barangay Clearance', 'Approved', '118559', '2024-10-24 08:00:14', 'delivery', NULL, 0),
+(26, 'BRGYB3-ZRT-D8D-XRZ-X0OH', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '0', '', '', '2024', 'Job seeking', 'on request', 'Sample Request', 'Barangay Clearance', 'Approved', '379402', '2024-10-24 09:23:21', 'delivery', NULL, 0),
+(27, 'BRGYB3-E6M-MF2-45H-464R', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '0', '2024-10-24', '18:40', '2024', 'Job seeking', 'on request', 'Sample Request', 'Barangay Clearance', 'Disapproved', '453950', '2024-10-24 09:40:16', 'pick-up', 25.00, 0),
+(28, 'BRGYB3-AFC-91R-KB8-G292', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '2024-10-24', '20:19', '2024', 'Meds', 'on request', 'Sample Request', 'Barangay Clearance', 'Approved', '743824', '2024-10-24 12:19:15', 'pick-up', NULL, 0),
+(29, 'BRGYB3-TIQ-FFV-WRS-67DG', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '2024-10-24', '20:21', '2024', 'Meds', 'on request', '', 'Barangay Clearance', 'Disapproved', '266076', '2024-10-24 12:21:48', 'pick-up', 25.00, 0),
+(30, 'BRGYB3-1U6-RO7-QIG-CVC0', 'WENNYL CALUMBA ROMERO', 'JP RIZAL', '42', '2024-10-24', '20:23', '2024', 'meds', 'on request', '', 'Barangay Clearance', 'Pending', '120661', '2024-10-24 12:24:09', 'pick-up', 25.00, 0),
+(31, 'BRGYB3-ZI8-HGG-0RV-VGUZ', 'WENNYL CALUMBA ROMERO', 'Blk D8 lot 20', '43', '2024-10-24', '20:38', '2024', 'Meds', 'for pick-up', 'Sample Request', 'Certificate of Indigency', 'Approved', '729905', '2024-10-24 12:38:33', 'pick-up', 100.00, 0),
+(32, 'BRGYB3-O2Z-PRS-0F8-K7J8', 'WENNYL CALUMBA ROMERO', 'BLK D 8 LOT 16 SAN LUIS 1 DASMARIÑAS CAV', '43', '', '', '2024', 'Loan', 'for delivery', '', 'Certificate of Residency', 'Approved', '276874', '2024-10-24 13:46:19', 'delivery', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -159,7 +160,8 @@ CREATE TABLE `indigents` (
   `address` varchar(255) NOT NULL,
   `contact_number` varchar(15) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_archive` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -173,54 +175,62 @@ CREATE TABLE `logs` (
   `user` varchar(255) NOT NULL,
   `date_log` varchar(255) NOT NULL,
   `action` varchar(255) NOT NULL,
-  `details` mediumtext NOT NULL
+  `details` mediumtext NOT NULL,
+  `is_archive` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `logs`
 --
 
-INSERT INTO `logs` (`id`, `user`, `date_log`, `action`, `details`) VALUES
-(27, 'administrator', '2024-05-26 18:29:01', 'Update 8 to Approved', ''),
-(28, 'administrator', '2024-05-26 18:29:08', 'Update 8 to Declined', ''),
-(29, 'administrator', '2024-05-26 18:31:08', 'Update 8 to Pending', ''),
-(30, 'administrator', '2024-05-26 18:31:12', 'Update 8 to Approved', ''),
-(31, 'administrator', '2024-05-28 07:52:40', 'Update 9 to Approved', ''),
-(32, 'administrator', '2024-10-19 18:50:40', 'Update 10 to Approved', ''),
-(33, 'administrator', '2024-10-19 18:59:59', 'Update 11 to Approved', ''),
-(34, 'administrator', '2024-10-20 22:04:27', 'Update Official named Alma M. Lapnos', ''),
-(35, 'administrator', '2024-10-20 22:04:33', 'Update Official named Alma M. Lapno', ''),
-(36, 'administrator', '2024-10-20 22:14:35', 'Added a new blotter entry by Abdul Jhabar', ''),
-(37, 'administrator', '2024-10-20 22:15:55', 'Edited blotter entry ID: 2', ''),
-(38, 'administrator', '2024-10-20 23:54:51', 'Added indigent: WENNYL CALUMBA ROMERO', ''),
-(39, 'administrator', '2024-10-20 23:55:57', 'Edited indigent ID: 1', ''),
-(40, 'administrator', '2024-10-20 23:57:30', 'Edited indigent ID: ', ''),
-(41, 'administrator', '2024-10-20 23:58:07', 'Edited indigent ID: 1', ''),
-(42, 'administrator', '2024-10-20 23:58:13', 'Deleted indigent ID: 1', ''),
-(43, 'administrator', '2024-10-23 09:45:36', 'Edited blotter entry ID: 1', ''),
-(44, 'administrator', '2024-10-23 09:45:48', 'Edited blotter entry ID: 2', ''),
-(45, 'administrator', '2024-10-23 09:46:03', 'Edited blotter entry ID: 1', ''),
-(46, 'administrator', '2024-10-23 09:46:07', 'Edited blotter entry ID: 2', ''),
-(47, 'administrator', '2024-10-24 23:14:47', 'Added a new blotter entry by Mherwen Wiel Romero', ''),
-(48, 'administrator', '2024-10-24 23:20:04', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', ''),
-(49, 'administrator', '2024-10-24 23:22:03', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', ''),
-(50, 'administrator', '2024-10-25 00:02:40', 'Edited blotter entry ID: 4', ''),
-(51, 'administrator', '2024-10-25 00:02:46', 'Edited blotter entry ID: 3', ''),
-(52, 'administrator', '2024-10-25 00:02:50', 'Edited blotter entry ID: 2', ''),
-(53, 'administrator', '2024-10-25 00:02:54', 'Edited blotter entry ID: 1', ''),
-(54, 'administrator', '2024-10-25 00:08:16', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Repor'),
-(55, 'administrator', '2024-10-25 00:08:35', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Repor'),
-(56, 'administrator', '2024-10-25 00:10:53', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Reporter from \"WENNYL CALUMBA ROMERO\" to \"WENNYL CALUMBA ROMERO\", Accused from \"Jennalyn Malvar\" to \"Jennalyn Malvar\", Status from \"Resolved\" to \"Resolved\"'),
-(57, 'administrator', '2024-10-25 00:37:45', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 4. Changes: Status: \"Pending\" to \"Dismissed\"'),
-(58, 'administrator', '2024-10-25 11:14:06', 'Added Official named Councilor Name', ''),
-(59, 'administrator', '2024-10-25 11:14:13', 'Updated Official named Councilor Name', ''),
-(60, 'administrator', '2024-10-25 11:32:09', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', ''),
-(61, 'administrator', '2024-11-11 20:43:11', 'Added voter named WENNYL CALUMBA ROMERO', ''),
-(62, 'administrator', '2024-11-11 21:12:27', 'Edited blotter entry ID: 6', ''),
-(63, 'administrator', '2024-11-11 22:04:16', 'Edited voter ID: WENNYL CALUMBA ROMERO', ''),
-(64, 'administrator', '2024-11-11 22:05:07', 'Edited voter ID: WENNYL CALUMBA ROMERO', ''),
-(65, 'administrator', '2024-11-11 22:06:01', 'Edited voter ID: WENNYL CALUMBA ROMERO', ''),
-(66, 'administrator', '2024-11-11 22:06:08', 'Edited voter ID: WENNYL CALUMBA ROMERO', '');
+INSERT INTO `logs` (`id`, `user`, `date_log`, `action`, `details`, `is_archive`) VALUES
+(27, 'administrator', '2024-05-26 18:29:01', 'Update 8 to Approved', '', 0),
+(28, 'administrator', '2024-05-26 18:29:08', 'Update 8 to Declined', '', 0),
+(29, 'administrator', '2024-05-26 18:31:08', 'Update 8 to Pending', '', 0),
+(30, 'administrator', '2024-05-26 18:31:12', 'Update 8 to Approved', '', 0),
+(31, 'administrator', '2024-05-28 07:52:40', 'Update 9 to Approved', '', 0),
+(32, 'administrator', '2024-10-19 18:50:40', 'Update 10 to Approved', '', 0),
+(33, 'administrator', '2024-10-19 18:59:59', 'Update 11 to Approved', '', 0),
+(34, 'administrator', '2024-10-20 22:04:27', 'Update Official named Alma M. Lapnos', '', 0),
+(35, 'administrator', '2024-10-20 22:04:33', 'Update Official named Alma M. Lapno', '', 0),
+(36, 'administrator', '2024-10-20 22:14:35', 'Added a new blotter entry by Abdul Jhabar', '', 0),
+(37, 'administrator', '2024-10-20 22:15:55', 'Edited blotter entry ID: 2', '', 0),
+(38, 'administrator', '2024-10-20 23:54:51', 'Added indigent: WENNYL CALUMBA ROMERO', '', 0),
+(39, 'administrator', '2024-10-20 23:55:57', 'Edited indigent ID: 1', '', 0),
+(40, 'administrator', '2024-10-20 23:57:30', 'Edited indigent ID: ', '', 0),
+(41, 'administrator', '2024-10-20 23:58:07', 'Edited indigent ID: 1', '', 0),
+(42, 'administrator', '2024-10-20 23:58:13', 'Deleted indigent ID: 1', '', 0),
+(43, 'administrator', '2024-10-23 09:45:36', 'Edited blotter entry ID: 1', '', 0),
+(44, 'administrator', '2024-10-23 09:45:48', 'Edited blotter entry ID: 2', '', 0),
+(45, 'administrator', '2024-10-23 09:46:03', 'Edited blotter entry ID: 1', '', 0),
+(46, 'administrator', '2024-10-23 09:46:07', 'Edited blotter entry ID: 2', '', 0),
+(47, 'administrator', '2024-10-24 23:14:47', 'Added a new blotter entry by Mherwen Wiel Romero', '', 0),
+(48, 'administrator', '2024-10-24 23:20:04', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', '', 0),
+(49, 'administrator', '2024-10-24 23:22:03', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', '', 0),
+(50, 'administrator', '2024-10-25 00:02:40', 'Edited blotter entry ID: 4', '', 0),
+(51, 'administrator', '2024-10-25 00:02:46', 'Edited blotter entry ID: 3', '', 0),
+(52, 'administrator', '2024-10-25 00:02:50', 'Edited blotter entry ID: 2', '', 0),
+(53, 'administrator', '2024-10-25 00:02:54', 'Edited blotter entry ID: 1', '', 0),
+(54, 'administrator', '2024-10-25 00:08:16', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Repor', 0),
+(55, 'administrator', '2024-10-25 00:08:35', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Repor', 0),
+(56, 'administrator', '2024-10-25 00:10:53', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 5. Date from \"2024-10-24\" to \"2024-10-24\", Time from \"23:21:00\" to \"23:21:00\", Incident Type from \"Harrasment\" to \"Harrasment\", Description from \"Posting defamation on social media.\" to \"Posting defamation on social media.\", Reporter from \"WENNYL CALUMBA ROMERO\" to \"WENNYL CALUMBA ROMERO\", Accused from \"Jennalyn Malvar\" to \"Jennalyn Malvar\", Status from \"Resolved\" to \"Resolved\"', 0),
+(57, 'administrator', '2024-10-25 00:37:45', 'Edited Blotter Entry', 'Edited Blotter Entry ID: 4. Changes: Status: \"Pending\" to \"Dismissed\"', 0),
+(58, 'administrator', '2024-10-25 11:14:06', 'Added Official named Councilor Name', '', 0),
+(59, 'administrator', '2024-10-25 11:14:13', 'Updated Official named Councilor Name', '', 0),
+(60, 'administrator', '2024-10-25 11:32:09', 'Added a new blotter entry by WENNYL CALUMBA ROMERO', '', 0),
+(61, 'administrator', '2024-11-11 20:43:11', 'Added voter named WENNYL CALUMBA ROMERO', '', 0),
+(62, 'administrator', '2024-11-11 21:12:27', 'Edited blotter entry ID: 6', '', 0),
+(63, 'administrator', '2024-11-11 22:04:16', 'Edited voter ID: WENNYL CALUMBA ROMERO', '', 0),
+(64, 'administrator', '2024-11-11 22:05:07', 'Edited voter ID: WENNYL CALUMBA ROMERO', '', 0),
+(65, 'administrator', '2024-11-11 22:06:01', 'Edited voter ID: WENNYL CALUMBA ROMERO', '', 0),
+(66, 'administrator', '2024-11-11 22:06:08', 'Edited voter ID: WENNYL CALUMBA ROMERO', '', 0),
+(67, 'administrator', '2024-11-11 22:30:07', 'Added Official named Gina P. Camerino', '', 0),
+(68, 'administrator', '2024-11-11 22:30:20', 'Updated Official named Gina P. Camerino', '', 0),
+(69, 'administrator', '2024-11-11 23:04:14', 'Edited announcement ID: Title', '', 0),
+(70, 'administrator', '2024-11-11 23:04:21', 'Deleted announcement ID: 17', '', 0),
+(71, 'administrator', '2024-11-11 23:04:29', 'Edited announcement ID: Katanugann', '', 0),
+(72, 'administrator', '2024-11-12 16:20:28', 'Edited announcement ID: Katanugan', '', 0),
+(73, 'administrator', '2024-11-12 16:20:31', 'Deleted announcement ID: 14', '', 0);
 
 -- --------------------------------------------------------
 
@@ -247,7 +257,7 @@ CREATE TABLE `officials` (
 INSERT INTO `officials` (`id`, `full_name`, `image`, `contact_number`, `position`, `address`, `start_term`, `end_term`, `is_archive`) VALUES
 (5, 'Alma M. Lapno', 'kapitan.png', '095342434', 'Barangay Captain', 'Barangay Burol III', '2024-05-08', '2026-10-08', 0),
 (6, 'Helen S. Bacanto', 'konsi-3.png', '094235645', 'Barangay Councilor', 'Barangay Burol III', '2024-05-08', '2024-05-27', 0),
-(7, 'Gina P. Camerino', 'konsi-2.png', '0954243234', 'Barangay Councilor', 'Barangay Burol III', '2024-05-08', '2024-05-20', 0);
+(14, 'Gina P. Camerino', '', '0954243234', 'Barangay Councilor', 'Barangay Burol III', '2024-11-11', '2024-11-11', 0);
 
 -- --------------------------------------------------------
 
@@ -282,18 +292,19 @@ INSERT INTO `payment_methods` (`id`, `method_name`, `image_path`, `updated_at`) 
 CREATE TABLE `payment_receipts` (
   `id` int(11) NOT NULL,
   `document_id` int(11) NOT NULL,
-  `payment_receipt_path` varchar(255) NOT NULL
+  `payment_receipt_path` varchar(255) NOT NULL,
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `payment_receipts`
 --
 
-INSERT INTO `payment_receipts` (`id`, `document_id`, `payment_receipt_path`) VALUES
-(3, 24, 'uploaded_img/receipts/1729666943_gcash.jpg'),
-(5, 25, 'uploaded_img/receipts/1729756814_gcash.jpg'),
-(6, 26, 'uploaded_img/receipts/1729761801_gcash.jpg'),
-(7, 32, 'uploaded_img/receipts/1729777579_gcash.jpg');
+INSERT INTO `payment_receipts` (`id`, `document_id`, `payment_receipt_path`, `is_archive`) VALUES
+(3, 24, 'uploaded_img/receipts/1729666943_gcash.jpg', 0),
+(5, 25, 'uploaded_img/receipts/1729756814_gcash.jpg', 0),
+(6, 26, 'uploaded_img/receipts/1729761801_gcash.jpg', 0),
+(7, 32, 'uploaded_img/receipts/1729777579_gcash.jpg', 0);
 
 -- --------------------------------------------------------
 
@@ -355,15 +366,16 @@ CREATE TABLE `user` (
   `mother_in_law` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'Pending',
   `profile_img` varchar(255) NOT NULL,
-  `category` varchar(255) NOT NULL
+  `category` varchar(255) NOT NULL,
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `full_name`, `date_of_birth`, `age`, `email`, `password`, `mobile_number`, `gender`, `village`, `phase`, `blk`, `street`, `id_type`, `id_number`, `issued_authority`, `issued_state`, `issued_date`, `expiry_date`, `address_type`, `nationality`, `state`, `district`, `block_number`, `father_name`, `mother_name`, `grandfather`, `spouse_name`, `father_in_law`, `mother_in_law`, `status`, `profile_img`, `category`) VALUES
-(13, 'WENNYL CALUMBA ROMERO', '2024-10-25', '0', 'newroskoto@gmail.com', '$2y$10$0IySnvw9l405JjPbB77Q5u2.OY1v4o0lSZnW5VZWL0rz347t4uCwO', '09553471926', 'Female', 'Accacia Homes', '1', 'Blk D 8 Lot 16', 'JP RIZAL', 'Philhealth', '533', 'None', 'CAVITE', '2024-10-25', '2024-10-25', 'Permanent', 'Filipino', 'CAVITE', 'District', 3216, 'Ariel Romero', 'Wennyl Romero', 'Patricio Romero', 'Nancy Momoland', 'Father of Nancy', 'Mother of Nancy', 'Approved', 'gcash.jpg', 'Adult');
+INSERT INTO `user` (`user_id`, `full_name`, `date_of_birth`, `age`, `email`, `password`, `mobile_number`, `gender`, `village`, `phase`, `blk`, `street`, `id_type`, `id_number`, `issued_authority`, `issued_state`, `issued_date`, `expiry_date`, `address_type`, `nationality`, `state`, `district`, `block_number`, `father_name`, `mother_name`, `grandfather`, `spouse_name`, `father_in_law`, `mother_in_law`, `status`, `profile_img`, `category`, `is_archive`) VALUES
+(13, 'WENNYL CALUMBA ROMERO', '2023-02-25', '0', 'newroskoto@gmail.com', '$2y$10$0IySnvw9l405JjPbB77Q5u2.OY1v4o0lSZnW5VZWL0rz347t4uCwO', '09553471926', 'Female', 'Accacia Homes', '1', 'Blk D 8 Lot 16', 'JP RIZAL', 'Philhealth', '533', 'None', 'CAVITE', '2024-10-25', '2024-10-25', 'Permanent', 'Filipino', 'CAVITE', 'District', 3216, 'Ariel Romero', 'Wennyl Romero', 'Patricio Romero', 'Nancy Momoland', 'Father of Nancy', 'Mother of Nancy', 'Approved', 'gcash.jpg', 'Adult', 0);
 
 -- --------------------------------------------------------
 
@@ -378,15 +390,16 @@ CREATE TABLE `voters` (
   `address` varchar(255) NOT NULL,
   `contact_number` varchar(15) DEFAULT NULL,
   `status` varchar(50) DEFAULT 'Active',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `voters`
 --
 
-INSERT INTO `voters` (`id`, `full_name`, `age`, `address`, `contact_number`, `status`, `created_at`) VALUES
-(4, 'WENNYL CALUMBA ROMERO', 2, 'JP RIZAL1', '23', 'Active', '2024-11-11 12:43:11');
+INSERT INTO `voters` (`id`, `full_name`, `age`, `address`, `contact_number`, `status`, `created_at`, `is_archive`) VALUES
+(4, 'WENNYL CALUMBA ROMERO', 2, 'JP RIZAL1', '23', 'Active', '2024-11-11 12:43:11', 0);
 
 --
 -- Indexes for dumped tables
@@ -503,13 +516,13 @@ ALTER TABLE `indigents`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `officials`
 --
 ALTER TABLE `officials`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`

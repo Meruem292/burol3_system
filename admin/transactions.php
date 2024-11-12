@@ -77,7 +77,7 @@ include('main_style.php');
         d.address, 
         d.age, 
         d.year_residency, 
-        d.purpose, 
+        d.purpose,
         d.note, 
         d.type, 
         d.control_number, 
