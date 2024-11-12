@@ -65,11 +65,29 @@ include('main_style.php');
                                 </thead>
                                 <tbody>
                                     <?php
+                                    include 'functions.php';
                                     $squery = $pdo->query("
-                                    SELECT pr.id, pr.document_id, pr.payment_receipt_path, d.full_name, d.category, d.status, d.address, d.age, d.year_residency, d.purpose, d.note, d.type, d.control_number, d.tracking_number 
-                                    FROM payment_receipts pr
-                                    JOIN documents d ON pr.document_id = d.id
-                                ");
+    SELECT 
+        pr.id, 
+        pr.document_id, 
+        pr.payment_receipt_path, 
+        d.full_name, 
+        d.category, 
+        d.status, 
+        d.address, 
+        d.age, 
+        d.year_residency, 
+        d.purpose, 
+        d.note, 
+        d.type, 
+        d.control_number, 
+        d.tracking_number 
+    FROM payment_receipts pr
+    JOIN documents d ON pr.document_id = d.id 
+    WHERE pr.is_archive = 0  -- Specify the table alias (d) for the is_archive column
+    ORDER BY pr.id DESC
+");
+
                                     while ($row = $squery->fetch(PDO::FETCH_ASSOC)) {
                                         $statusClass = '';
                                         if ($row['status'] === 'Approved') {
@@ -91,6 +109,7 @@ include('main_style.php');
                                             <a href="' . htmlspecialchars($row['payment_receipt_path']) . '" data-lightbox="receipt-' . htmlspecialchars($row['id']) . '">
                                                 <img src="' . htmlspecialchars($row['payment_receipt_path']) . '" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
                                             </a>
+                                            
                                         </td>
                                         <td>';
 
@@ -108,7 +127,17 @@ include('main_style.php');
                                         echo '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
                                             <i class="fa fa-eye" aria-hidden="true"></i> Edit Status
                                           </button>
+
+                                          <form method="POST" action="archive.php">
+                                                <!-- Input the ID of the record you want to archive -->
+                                                <input type="hidden" name="id" value="' . $row['id'] . '"> <!-- Change the value to the appropriate ID -->
+                                                <input type="hidden" name="table" value="payment_receipts">
+                                                
+                                                <!-- Button to trigger the archive -->
+                                                <button type="submit" name="archive" value="1">Archive</button>
+                                            </form>
                                         </td>
+                                        
                                     </tr>';
 
                                         // Include the view modal with complete user details

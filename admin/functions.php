@@ -486,58 +486,31 @@ if (isset($_POST['btn_edit_resident'])) {
     exit();
 }
 
+function archiveData($pdo, $table, $id) {
+    try {
+        // Check if the table exists
+        $stmt = $pdo->prepare("SHOW TABLES LIKE :table");
+        $stmt->execute([':table' => $table]);
 
-//Manage Receipts 
-// Check if the form for editing the transaction is submitted
-if (isset($_POST['btn_edit_transaction'])) {
-    include('db.php'); // Assuming db.php contains the PDO connection
+        if ($stmt->rowCount() == 0) {
+            return "Error: Table '$table' does not exist.";
+        }
 
-    // Get the data from POST, applying sanitization
-    $transaction_id = filter_var($_POST['transaction_id'], FILTER_SANITIZE_NUMBER_INT);
-    $tracking_number = filter_var($_POST['edit_tracking_number']);
-    $full_name = filter_var($_POST['edit_full_name']);
-    $category = filter_var($_POST['edit_category']);
-    $status = filter_var($_POST['edit_status']);
-    $payment_receipt_path = filter_var($_POST['edit_payment_receipt_path']);
-
-    // Update statement with parameterized query for security
-    $stmt = $pdo->prepare("UPDATE payment_receipts 
-                           SET tracking_number = :tracking_number, 
-                               full_name = :full_name, 
-                               category = :category, 
-                               status = :status, 
-                               payment_receipt_path = :payment_receipt_path
-                           WHERE id = :transaction_id");
-    $stmt->execute([
-        ':tracking_number' => $tracking_number,
-        ':full_name' => $full_name,
-        ':category' => $category,
-        ':status' => $status,
-        ':payment_receipt_path' => $payment_receipt_path,
-        ':transaction_id' => $transaction_id
-    ]);
-
-    // Redirect to avoid form resubmission on refresh
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-
-if (isset($_POST['btn_delete_transaction'])) {
-    // Get the transaction ID from the form submission
-    $transaction_id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-
-    // Prepare the SQL query to delete the transaction
-    $stmt = $pdo->prepare("DELETE FROM payment_receipts WHERE id = :transaction_id");
-    $stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
-
-    // Execute the query
-    if ($stmt->execute()) {
-        // Redirect to the same page after deletion to avoid resubmission on refresh
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    } else {
-        // Handle the case when deletion fails
-        echo "Error deleting the transaction.";
+        // Prepare the update query to archive the record
+        $sql = "UPDATE $table SET is_archive = 1 WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        
+        // Bind the parameters
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        
+        // Execute the statement
+        if ($stmt->execute()) {
+            return "Record archived successfully.";
+        } else {
+            return "Error: Unable to archive record.";
+        }
+    } catch (PDOException $e) {
+        return "Error: " . $e->getMessage();
     }
 }
+?>
