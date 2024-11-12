@@ -238,6 +238,7 @@ if (isset($_POST['btn_edit_voter'])) {
 }
 
 if (isset($_POST['btn_delete_voter'])) {
+    include 'db.php';
     $voter_id = $_POST['hidden_id'];
 
     // Delete the voter entry
