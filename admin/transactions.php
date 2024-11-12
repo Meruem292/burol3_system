@@ -45,16 +45,14 @@ include('main_style.php');
                     <div class="box">
                         <div class="box-header">
                             <button class="btn btn-success" data-toggle="modal" data-target="#uploadMopModal">Change MOP</button>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#updatePricesModal">
-                                Update Prices
-                            </button>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#updatePricesModal">Update Prices</button>
                         </div>
                         <div class="box-body">
                             <table id="paymentTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Tracking Number</th> <!-- Added tracking number column -->
+                                        <th>Tracking Number</th>
                                         <th>Document ID</th>
                                         <th>Requestor's Name</th>
                                         <th>Progress</th>
@@ -66,10 +64,10 @@ include('main_style.php');
                                 <tbody>
                                     <?php
                                     $squery = $pdo->query("
-                                    SELECT pr.id, pr.document_id, pr.payment_receipt_path, d.full_name, d.category, d.status, d.address, d.age, d.year_residency, d.purpose, d.note, d.type, d.control_number, d.tracking_number 
-                                    FROM payment_receipts pr
-                                    JOIN documents d ON pr.document_id = d.id
-                                ");
+                                        SELECT pr.id, pr.document_id, pr.payment_receipt_path, d.full_name, d.category, d.status, d.tracking_number 
+                                        FROM payment_receipts pr
+                                        JOIN documents d ON pr.document_id = d.id
+                                    ");
                                     while ($row = $squery->fetch(PDO::FETCH_ASSOC)) {
                                         $statusClass = '';
                                         if ($row['status'] === 'Approved') {
@@ -79,113 +77,44 @@ include('main_style.php');
                                         } elseif ($row['status'] === 'Disapproved') {
                                             $statusClass = 'alert-danger';
                                         }
-                                        echo '
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_delete[]" class="chk_delete" value="' . $row['id'] . '" /></td>
-                                        <td>' . htmlspecialchars($row['tracking_number']) . '</td> <!-- Added tracking number value -->
-                                        <td>' . htmlspecialchars($row['document_id']) . '</td>
-                                        <td>' . htmlspecialchars($row['full_name']) . '</td>
-                                        <td>' . htmlspecialchars($row['category']) . '</td>
-                                        <td><span class="badge ' . $statusClass . '">' . htmlspecialchars($row['status']) . '</span></td>
-                                        <td>
-                                            <a href="' . htmlspecialchars($row['payment_receipt_path']) . '" data-lightbox="receipt-' . htmlspecialchars($row['id']) . '">
-                                                <img src="' . htmlspecialchars($row['payment_receipt_path']) . '" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
-                                            </a>
-                                        </td>
-                                        <td>';
-
-                                        // Conditionally display the approve button
-                                        if ($row['status'] === 'Pending') {
-                                            echo '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approveModal' . $row['id'] . '">
-                                                <i class="fa fa-check" aria-hidden="true"></i> Approve
-                                              </button>
-                                              <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#disapproveModal' . $row['id'] . '">
-                                                <i class="fa fa-times" aria-hidden="true"></i> Disapprove
-                                              </button>';
-                                        }
-
-                                        // View button to show details
-                                        echo '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
-                                            <i class="fa fa-eye" aria-hidden="true"></i> View  
-                                          </button>
-                                        </td>
-                                    </tr>';
-
-                                        // Include the approval modal
-                                        echo '<div class="modal fade" id="approveModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="approveModalLabel">Approve Document Request</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to approve the document request for <strong>' . htmlspecialchars($row['full_name']) . '</strong>?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <form action="approve_document.php" method="POST">
-                                                            <input type="hidden" name="document_id" value="' . $row['document_id'] . '">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Approve</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>';
-
-                                        // Disapprove Modal
-                                        echo '<div class="modal fade" id="disapproveModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="disapproveModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="disapproveModalLabel">Disapprove Document Request</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
+                                    ?>
+                                        <tr>
+                                            <td><input type="checkbox" name="chk_delete[]" class="chk_delete" value="<?= $row['id'] ?>" /></td>
+                                            <td><?= htmlspecialchars($row['tracking_number']) ?></td>
+                                            <td><?= htmlspecialchars($row['document_id']) ?></td>
+                                            <td><?= htmlspecialchars($row['full_name']) ?></td>
+                                            <td><?= htmlspecialchars($row['category']) ?></td>
+                                            <td><span class="badge <?= $statusClass ?>"><?= htmlspecialchars($row['status']) ?></span></td>
+                                            <td>
+                                                <a href="<?= htmlspecialchars($row['payment_receipt_path']) ?>" data-lightbox="receipt-<?= htmlspecialchars($row['id']) ?>">
+                                                    <img src="<?= htmlspecialchars($row['payment_receipt_path']) ?>" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <?php if ($row['status'] === 'Pending'): ?>
+                                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approveModal<?= $row['id'] ?>">
+                                                        <i class="fa fa-check" aria-hidden="true"></i> Approve
                                                     </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to disapprove the document request for <strong>' . htmlspecialchars($row['full_name']) . '</strong>?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="disapprove_document.php" method="POST">
-                                                        <input type="hidden" name="document_id" value="' . $row['document_id'] . '">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <button type="submit" class="btn btn-danger">Disapprove</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>';
-
-                                        // Include the view modal with complete user details
-                                        echo '<div class="modal fade" id="viewModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="viewModalLabel">Document Request Details</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p><strong>Tracking Number:</strong> ' . htmlspecialchars($row['tracking_number']) . '</p>
-                                                        <p><strong>Requestors Name:</strong> ' . htmlspecialchars($row['full_name']) . '</p>
-                                                        <p><strong>Address:</strong> ' . htmlspecialchars($row['address']) . '</p>
-                                                        <p><strong>Age:</strong> ' . htmlspecialchars($row['age']) . '</p>
-                                                        <p><strong>Years of Residency:</strong> ' . htmlspecialchars($row['year_residency']) . '</p>
-                                                        <p><strong>Purpose:</strong> ' . htmlspecialchars($row['purpose']) . '</p>
-                                                        <p><strong>Notes:</strong> ' . htmlspecialchars($row['note']) . '</p>
-                                                        <p><strong>Document Type:</strong> ' . htmlspecialchars($row['type']) . '</p>
-                                                        <p><strong>Control Number:</strong> ' . htmlspecialchars($row['control_number']) . '</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>';
+                                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#disapproveModal<?= $row['id'] ?>">
+                                                        <i class="fa fa-times" aria-hidden="true"></i> Disapprove
+                                                    </button>
+                                                <?php endif; ?>
+                                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal<?= $row['id'] ?>">
+                                                    <i class="fa fa-eye"></i> View
+                                                </button>
+                                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<?= $row['id'] ?>">
+                                                    <i class="fa fa-pencil"></i> Edit
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?= $row['id'] ?>">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                        
+                                        include "modals/other_modal_transaction.php";
+                                        include "modals/edit_modal_transaction.php";
+                                        include "modals/delete_modal_transaction.php";      
                                     }
                                     ?>
                                 </tbody>
@@ -196,6 +125,8 @@ include('main_style.php');
             </section>
         </aside>
     </div>
+    <!-- Modals -->
+    
 
 
     <!-- Upload MOP Modal -->
@@ -328,6 +259,7 @@ include('main_style.php');
             });
         });
     </script>
+
 
     <?php include 'footer.php'; ?>
 </body>

@@ -458,7 +458,7 @@ if (isset($_POST['btn_delete_announcement'])) {
 
 if (isset($_POST['btn_edit_resident'])) {
     include('db.php');
-    
+
     // Get the data from POST, applying sanitization
     $user_id = filter_var($_POST['resident_id'], FILTER_SANITIZE_NUMBER_INT);
     $full_name = filter_var($_POST['edit_full_name']);
@@ -484,4 +484,57 @@ if (isset($_POST['btn_edit_resident'])) {
     // Redirect to avoid form resubmission on refresh
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit();
+}
+
+
+//Manage Receipts 
+
+// Check if the form for editing the transaction is submitted
+if (isset($_POST['btn_edit_transaction'])) {
+    include('db.php'); // Assuming db.php contains the PDO connection
+
+    // Get the data from POST, applying sanitization
+    $transaction_id = filter_var($_POST['transaction_id'], FILTER_SANITIZE_NUMBER_INT);
+    $tracking_number = filter_var($_POST['edit_tracking_number']);
+    $full_name = filter_var($_POST['edit_full_name']);
+    $category = filter_var($_POST['edit_category']);
+    $status = filter_var($_POST['edit_status']);
+    $payment_receipt_path = filter_var($_POST['edit_payment_receipt_path']);
+
+    // Update statement with parameterized query for security
+    $stmt = $pdo->prepare("UPDATE payment_receipts 
+                           SET tracking_number = :tracking_number, full_name = :full_name, category = :category, 
+                               status = :status, payment_receipt_path = :payment_receipt_path
+                           WHERE id = :transaction_id");
+    $stmt->execute([
+        ':tracking_number' => $tracking_number,
+        ':full_name' => $full_name,
+        ':category' => $category,
+        ':status' => $status,
+        ':payment_receipt_path' => $payment_receipt_path,
+        ':transaction_id' => $transaction_id
+    ]);
+
+    // Redirect to avoid form resubmission on refresh
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+if (isset($_POST['btn_delete_transaction'])) {
+    // Get the transaction ID from the form submission
+    $transaction_id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
+
+    // Prepare the SQL query to delete the transaction
+    $stmt = $pdo->prepare("DELETE FROM payment_receipts WHERE id = :transaction_id");
+    $stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+
+    // Execute the query
+    if ($stmt->execute()) {
+        // Redirect to the same page after deletion to avoid resubmission on refresh
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    } else {
+        // Handle the case when deletion fails
+        echo "Error deleting the transaction.";
+    }
 }
