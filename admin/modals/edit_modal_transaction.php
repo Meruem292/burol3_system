@@ -1,5 +1,5 @@
-
 <!-- Edit Modal -->
+<?php include "functions.php" ?>
 <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<?= $row['id'] ?>" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -16,7 +16,7 @@
 
                     <!-- Tracking Number -->
                     <div class="form-group">
-                        <label for="tracking_number">Tracking Number</label>
+                        <label for="tracking_number">Tracking Numbers</label>
                         <input type="text" name="edit_tracking_number" class="form-control" value="<?= htmlspecialchars($row['tracking_number']) ?>" required>
                     </div>
 

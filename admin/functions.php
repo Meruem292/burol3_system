@@ -488,7 +488,6 @@ if (isset($_POST['btn_edit_resident'])) {
 
 
 //Manage Receipts 
-
 // Check if the form for editing the transaction is submitted
 if (isset($_POST['btn_edit_transaction'])) {
     include('db.php'); // Assuming db.php contains the PDO connection
@@ -503,8 +502,11 @@ if (isset($_POST['btn_edit_transaction'])) {
 
     // Update statement with parameterized query for security
     $stmt = $pdo->prepare("UPDATE payment_receipts 
-                           SET tracking_number = :tracking_number, full_name = :full_name, category = :category, 
-                               status = :status, payment_receipt_path = :payment_receipt_path
+                           SET tracking_number = :tracking_number, 
+                               full_name = :full_name, 
+                               category = :category, 
+                               status = :status, 
+                               payment_receipt_path = :payment_receipt_path
                            WHERE id = :transaction_id");
     $stmt->execute([
         ':tracking_number' => $tracking_number,
@@ -519,6 +521,7 @@ if (isset($_POST['btn_edit_transaction'])) {
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit();
 }
+
 
 if (isset($_POST['btn_delete_transaction'])) {
     // Get the transaction ID from the form submission

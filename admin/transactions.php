@@ -45,14 +45,16 @@ include('main_style.php');
                     <div class="box">
                         <div class="box-header">
                             <button class="btn btn-success" data-toggle="modal" data-target="#uploadMopModal">Change MOP</button>
-                            <button class="btn btn-info" data-toggle="modal" data-target="#updatePricesModal">Update Prices</button>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#updatePricesModal">
+                                Update Prices
+                            </button>
                         </div>
                         <div class="box-body">
                             <table id="paymentTable" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Tracking Number</th>
+                                        <th>Tracking Number</th> <!-- Added tracking number column -->
                                         <th>Document ID</th>
                                         <th>Requestor's Name</th>
                                         <th>Progress</th>
@@ -64,10 +66,10 @@ include('main_style.php');
                                 <tbody>
                                     <?php
                                     $squery = $pdo->query("
-                                        SELECT pr.id, pr.document_id, pr.payment_receipt_path, d.full_name, d.category, d.status, d.tracking_number 
-                                        FROM payment_receipts pr
-                                        JOIN documents d ON pr.document_id = d.id
-                                    ");
+                                    SELECT pr.id, pr.document_id, pr.payment_receipt_path, d.full_name, d.category, d.status, d.address, d.age, d.year_residency, d.purpose, d.note, d.type, d.control_number, d.tracking_number 
+                                    FROM payment_receipts pr
+                                    JOIN documents d ON pr.document_id = d.id
+                                ");
                                     while ($row = $squery->fetch(PDO::FETCH_ASSOC)) {
                                         $statusClass = '';
                                         if ($row['status'] === 'Approved') {
@@ -77,44 +79,81 @@ include('main_style.php');
                                         } elseif ($row['status'] === 'Disapproved') {
                                             $statusClass = 'alert-danger';
                                         }
-                                    ?>
-                                        <tr>
-                                            <td><input type="checkbox" name="chk_delete[]" class="chk_delete" value="<?= $row['id'] ?>" /></td>
-                                            <td><?= htmlspecialchars($row['tracking_number']) ?></td>
-                                            <td><?= htmlspecialchars($row['document_id']) ?></td>
-                                            <td><?= htmlspecialchars($row['full_name']) ?></td>
-                                            <td><?= htmlspecialchars($row['category']) ?></td>
-                                            <td><span class="badge <?= $statusClass ?>"><?= htmlspecialchars($row['status']) ?></span></td>
-                                            <td>
-                                                <a href="<?= htmlspecialchars($row['payment_receipt_path']) ?>" data-lightbox="receipt-<?= htmlspecialchars($row['id']) ?>">
-                                                    <img src="<?= htmlspecialchars($row['payment_receipt_path']) ?>" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php if ($row['status'] === 'Pending'): ?>
-                                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approveModal<?= $row['id'] ?>">
-                                                        <i class="fa fa-check" aria-hidden="true"></i> Approve
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#disapproveModal<?= $row['id'] ?>">
-                                                        <i class="fa fa-times" aria-hidden="true"></i> Disapprove
-                                                    </button>
-                                                <?php endif; ?>
-                                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal<?= $row['id'] ?>">
-                                                    <i class="fa fa-eye"></i> View
-                                                </button>
-                                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<?= $row['id'] ?>">
-                                                    <i class="fa fa-pencil"></i> Edit
-                                                </button>
-                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?= $row['id'] ?>">
-                                                    <i class="fa fa-trash"></i> Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php
-                                        
-                                        include "modals/other_modal_transaction.php";
-                                        include "modals/edit_modal_transaction.php";
-                                        include "modals/delete_modal_transaction.php";      
+                                        echo '
+                                    <tr>
+                                        <td><input type="checkbox" name="chk_delete[]" class="chk_delete" value="' . $row['id'] . '" /></td>
+                                        <td>' . htmlspecialchars($row['tracking_number']) . '</td> <!-- Added tracking number value -->
+                                        <td>' . htmlspecialchars($row['document_id']) . '</td>
+                                        <td>' . htmlspecialchars($row['full_name']) . '</td>
+                                        <td>' . htmlspecialchars($row['category']) . '</td>
+                                        <td><span class="badge ' . $statusClass . '">' . htmlspecialchars($row['status']) . '</span></td>
+                                        <td>
+                                            <a href="' . htmlspecialchars($row['payment_receipt_path']) . '" data-lightbox="receipt-' . htmlspecialchars($row['id']) . '">
+                                                <img src="' . htmlspecialchars($row['payment_receipt_path']) . '" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
+                                            </a>
+                                        </td>
+                                        <td>';
+
+                                        // Conditionally display the approve button
+                                        if ($row['status'] === 'Pending') {
+                                            echo '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approveModal' . $row['id'] . '">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Approve
+                                              </button>
+                                              <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#disapproveModal' . $row['id'] . '">
+                                                <i class="fa fa-times" aria-hidden="true"></i> Disapprove
+                                              </button>';
+                                        }
+
+                                        // View button to show details
+                                        echo '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
+                                            <i class="fa fa-eye" aria-hidden="true"></i> Edit Status
+                                          </button>
+                                        </td>
+                                    </tr>';
+
+                                        // Include the view modal with complete user details
+                                        echo '<div class="modal fade" id="viewModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="viewModalLabel">Document Request Details</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>Tracking Number:</strong> ' . htmlspecialchars($row['tracking_number']) . '</p>
+                                                        <p><strong>Requestor\'s Name:</strong> ' . htmlspecialchars($row['full_name']) . '</p>
+                                                        <p><strong>Address:</strong> ' . htmlspecialchars($row['address']) . '</p>
+                                                        <p><strong>Age:</strong> ' . htmlspecialchars($row['age']) . '</p>
+                                                        <p><strong>Years of Residency:</strong> ' . htmlspecialchars($row['year_residency']) . '</p>
+                                                        <p><strong>Purpose:</strong> ' . htmlspecialchars($row['purpose']) . '</p>
+                                                        <p><strong>Notes:</strong> ' . htmlspecialchars($row['note']) . '</p>
+                                                        <p><strong>Document Type:</strong> ' . htmlspecialchars($row['type']) . '</p>
+                                                        <p><strong>Control Number:</strong> ' . htmlspecialchars($row['control_number']) . '</p>
+                                                       
+                                                        <!-- Status Selection -->
+                                                         <form method="POST" action="update_status.php">
+                                                        <div class="form-group">
+                                                            <label for="statusSelect' . $row['id'] . '"><strong>Status:</strong></label>
+                                                            <select class="form-control" id="statusSelect' . $row['id'] . '" name="status">
+                                                                <option value="Pending" ' . ($row['status'] == 'Pending' ? 'selected' : '') . '>Pending</option>
+                                                                <option value="Approved" ' . ($row['status'] == 'Approved' ? 'selected' : '') . '>Approved</option>
+                                                                <option value="Disapproved" ' . ($row['status'] == 'Disapproved' ? 'selected' : '') . '>Disapproved</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <!-- Include the document_id here -->
+                                                        
+                                                            <input type="hidden" name="document_id" value="' . $row['document_id'] . '" />
+                                                            <button type="submit" class="btn btn-primary">Update Status</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>';
                                     }
                                     ?>
                                 </tbody>
@@ -125,8 +164,6 @@ include('main_style.php');
             </section>
         </aside>
     </div>
-    <!-- Modals -->
-    
 
 
     <!-- Upload MOP Modal -->
@@ -258,6 +295,28 @@ include('main_style.php');
                 });
             });
         });
+    </script>
+
+    <script>
+        function updateStatus(documentId) {
+            var newStatus = document.getElementById('statusSelect' + documentId).value;
+
+            $.ajax({
+                url: 'update_status.php',
+                method: 'POST',
+                data: {
+                    document_id: documentId,
+                    status: newStatus
+                },
+                success: function(response) {
+                    alert(response); // Show success message
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function() {
+                    alert('Error updating status.');
+                }
+            });
+        }
     </script>
 
 

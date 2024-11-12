@@ -1,4 +1,3 @@
-
 <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel<?= $row['id'] ?>" aria-hidden="true">
     <div class="modal-dialog" role="document">
