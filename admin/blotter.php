@@ -33,49 +33,63 @@ include('db.php'); // Ensure database connection is established here
                     </div>
 
                     <div class="box-body">
-                        <form method="post">
-                            <table id="blotterTable" class="table table-bordered table-striped">
-                                <thead>
+
+                        <table id="blotterTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Incident Type</th>
+                                    <th>Description</th>
+                                    <th>Reporter</th>
+                                    <th>Accused</th>
+                                    <th>Status</th>
+                                    <th>Created At</th>
+                                    <th style="width: 130px;">Option</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                // Fetch blotter entries from the database
+                                $squery = $pdo->query("SELECT * FROM blotter WHERE is_archive = 0 ORDER BY created_at DESC");
+                                while ($row = $squery->fetch(PDO::FETCH_ASSOC)) {
+                                ?>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Incident Type</th>
-                                        <th>Description</th>
-                                        <th>Reporter</th>
-                                        <th>Accused</th>
-                                        <th>Status</th>
-                                        <th>Created At</th>
-                                        <th style="width: 130px;">Option</th>
+                                        <td><?php echo $row['id'] ?></td>
+                                        <td><?php echo $row['date'] ?></td>
+                                        <td><?php echo $row['time'] ?></td>
+                                        <td><?php echo $row['incident_type'] ?></td>
+                                        <td><?php echo $row['description'] ?></td>
+                                        <td><?php echo $row['reporter_name'] ?></td>
+                                        <td><?php echo $row['accused_name'] ?></td>
+                                        <td><?php echo $row['status'] ?></td>
+                                        <td><?php echo $row['created_at'] ?></td>
+                                        <td>
+                                            <div style="display: flex; gap: 5px;">
+                                                <button class="btn btn-primary btn-sm" data-target="#editModalBlotter<?php echo $row['id'] ?>" data-toggle="modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                                                <form method="post" action="archive.php">
+                                                    <input type="hidden" name="id" value="<?php echo  trim($row['id']) ?>">
+                                                    <input type="hidden" name="table" value="blotter">
+                                                    <button class="btn btn-warning btn-sm" type="submit" name="archive" value="1"><i class="fa fa-archive"></i> Archive</button>
+                                                </form>
+
+                                                <form method="post" action="delete.php">
+                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>" />
+                                                    <input type="hidden" name="table" value="documents" />
+                                                    <button type="submit" name="archive" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    // Fetch blotter entries from the database
-                                    $squery = $pdo->query("SELECT * FROM blotter ORDER BY created_at DESC");
-                                    while ($row = $squery->fetch(PDO::FETCH_ASSOC)) {
-                                        echo '
-                                            <tr>
-                                                <td>' . $row['id'] . '</td>
-                                                <td>' . $row['date'] . '</td>
-                                                <td>' . $row['time'] . '</td>
-                                                <td>' . $row['incident_type'] . '</td>
-                                                <td>' . $row['description'] . '</td>
-                                                <td>' . $row['reporter_name'] . '</td>
-                                                <td>' . $row['accused_name'] . '</td>
-                                                <td>' . $row['status'] . '</td>
-                                                <td>' . $row['created_at'] . '</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" data-target="#editModalBlotter' . $row['id'] . '" data-toggle="modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
-                                                </td>   
-                                            </tr>';
-                                        include "modals/edit_modal_blotter.php";
-                                        include "modals/delete_modal_blotter.php";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </form>
+                                <?php
+                                    include "modals/edit_modal_blotter.php";
+                                    include "modals/delete_modal_blotter.php";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </section>

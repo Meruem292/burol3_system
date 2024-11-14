@@ -33,7 +33,7 @@ if (!isset($_SESSION['role'])) {
                 <section class="content">
                     <?php
                     $id = $_GET['id'];
-                    $selectResident = $pdo->query("SELECT * FROM user WHERE user_id = '$id'");
+                    $selectResident = $pdo->query("SELECT * FROM user WHERE id = '$id'");
                     $row = $selectResident->fetch(PDO::FETCH_ASSOC);
                     $dateString = strtotime($row['date_of_birth']);
                     $formattedDate = date('F j, Y', $dateString);

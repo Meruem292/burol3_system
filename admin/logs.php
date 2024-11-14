@@ -40,21 +40,30 @@ if (!isset($_SESSION['role'])) {
                                         <th>Date</th>
                                         <th>Action</th>
                                         <th><Details></Details></th>
+                                        <th>Archive</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     // Fetch logs from the database
-                                    $query = $pdo->query("SELECT * FROM logs ORDER BY date_log DESC");
+                                    $query = $pdo->query("SELECT * FROM logs WHERE is_archive = 0 ORDER BY date_log DESC");
                                     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                        echo '
+                                        ?>
                                         <tr>
-                                            <td>' . $row['id'] . '</td>
-                                            <td>' . $row['user'] . '</td>
-                                            <td>' . date('Y-m-d H:i:s', strtotime($row['date_log'])) . '</td>
-                                            <td>' . $row['action'] . '</td>
-                                            <td>' . $row['details'] . '</td>
-                                        </tr>';
+                                            <td><?php echo $row['id'] ?></td>
+                                            <td><?php echo $row['user'] ?></td>
+                                            <td><?php echo date('Y-m-d H:i:s', strtotime($row['date_log'])) ?></td>
+                                            <td><?php echo $row['action'] ?></td>
+                                            <td><?php echo $row['details'] ?></td>
+                                            <td>
+                                                <form method="post" action="archive.php">
+                                                    <input type="hidden" name="id" value="<?php echo $row['id'] ?>" />
+                                                    <input type="hidden" name="table" value="logs" />
+                                                    <button type="submit" name="archive" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to archive this log?')"><i class="fa fa-archive"></i> Archive</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
                                     ?>
                                 </tbody>

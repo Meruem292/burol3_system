@@ -1,5 +1,5 @@
 <?php include('functions.php');?>
-<div id="editResidentModal<?php echo $row['user_id']; ?>" class="modal fade">
+<div id="editResidentModal<?php echo $row['id']; ?>" class="modal fade">
     <form method="post">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -8,7 +8,7 @@
                     <h4 class="modal-title">Edit Resident</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="resident_id" value="<?php echo $row['user_id']; ?>">
+                    <input type="hidden" name="resident_id" value="<?php echo $row['id']; ?>">
                     <div class="form-group">
                         <label for="edit_full_name">Full Name:</label>
                         <input id="edit_full_name" name="edit_full_name" class="form-control" type="text" value="<?php echo htmlspecialchars($row['full_name'], ENT_QUOTES, 'UTF-8'); ?>" required />

@@ -2,15 +2,15 @@
 session_start();
 require "db.php";
 
-if (isset($_SESSION["user_id"])) {
+if (isset($_SESSION["id"])) {
   // If the user is logged in, retrieve user information
-  $stmt = $pdo->prepare("SELECT * FROM user WHERE user_id = :id");
-  $stmt->execute([':id' => $_SESSION["user_id"]]);
+  $stmt = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+  $stmt->execute([':id' => $_SESSION["id"]]);
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Access the 'user_id' session variable only if it is set
-$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+// Access the 'id' session variable only if it is set
+$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
 ?>
 
@@ -152,7 +152,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
           <li><a class="nav-link scrollto" href="#" data-bs-toggle="modal" data-bs-target="#trackRequestModal">Track Request</a></li>
 
           <?php
-          if (!isset($user_id)) {
+          if (!isset($id)) {
             echo '
             <li>
                 <div class="login-dropdown">
@@ -187,7 +187,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <?php if ($user_id == null) { ?>
+          <?php if ($id == null) { ?>
             <form id="trackRequestForm">
               <div class="mb-3">
                 <label for="trackingNumber" class="form-label">Tracking Number</label>
@@ -212,7 +212,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
               <tbody id="trackingTableBody">
                 <!-- Data will be dynamically inserted here -->
               </tbody>
-            </table>
+            </table> 
           </div>
 
         </div>
@@ -332,7 +332,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
               <i class="ri-discuss-line icon"></i>
               <h3>Barangay Clearance</h3>
               <p></p>
-              <a href="<?= isset($user_id) ? 'brgy_clearance.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+              <a href="<?= isset($id) ? 'brgy_clearance.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
 
@@ -341,7 +341,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
               <i class="ri-discuss-line icon"></i>
               <h3>Certificate of Indigency</h3>
               <p></p>
-              <a href="<?= isset($user_id) ? 'indigency.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+              <a href="<?= isset($id) ? 'indigency.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
 
@@ -350,7 +350,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
               <i class="ri-discuss-line icon"></i>
               <h3>Certificate of Residency</h3>
               <p></p>
-              <a href="<?= isset($user_id) ? 'residency.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+              <a href="<?= isset($id) ? 'residency.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
 
@@ -360,7 +360,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
               <i class="ri-discuss-line icon"></i>
               <h3>Blotter</h3>
               <p></p>
-              <a href="<?= isset($user_id) ? 'blotter.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
+              <a href="<?= isset($id) ? 'blotter.php' : 'login.php' ?>" class="read-more"><span>Read More</span> <i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
           <!-- blotter end -->
@@ -675,11 +675,6 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
       })
       .catch(error => console.error('Error fetching user requests:', error));
   </script>
-
-
-
-
-
 
 
 

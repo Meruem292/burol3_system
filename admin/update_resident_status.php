@@ -10,7 +10,7 @@ function updateResidentStatus($pdo, $resident_id, $new_status) {
 
     try {
         // Prepare the update statement
-        $stmt = $pdo->prepare("UPDATE user SET status = :status WHERE user_id = :resident_id");
+        $stmt = $pdo->prepare("UPDATE user SET status = :status WHERE id = :resident_id");
         $stmt->bindParam(':status', $new_status);
         $stmt->bindParam(':resident_id', $resident_id);
         

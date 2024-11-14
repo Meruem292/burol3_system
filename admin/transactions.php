@@ -110,38 +110,36 @@ include('main_style.php');
                                                 <img src="' . htmlspecialchars($row['payment_receipt_path']) . '" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
                                             </a>
                                             
+                                        </td>';
+                                    ?>
+                                        <td>
+
+                                            <div style="display: flex; gap: 5px;">
+                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit Status
+                                                </button>
+
+                                                <form method="POST" action="archive.php">
+                                                    <!-- Input the ID of the record you want to archive -->
+                                                    <input type="hidden" name="id" value="' . $row['id'] . '"> <!-- Change the value to the appropriate ID -->
+                                                    <input type="hidden" name="table" value="payment_receipts">
+
+                                                    <!-- Button to trigger the archive -->
+                                                    <button class="btn btn-warning btn-sm" type="submit" name="archive" value="1"><i class="fa fa-archive"></i>Archive</button>
+                                                </form>
+                                                <form method="post" action="delete.php">
+                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>" />
+                                                    <input type="hidden" name="table" value="documents" />
+                                                    <button type="submit" name="archive" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
+                                                </form>
+
+                                            </div>
                                         </td>
-                                        <td>';
 
-                                        // Conditionally display the approve button
-                                        if ($row['status'] === 'Pending') {
-                                            echo '<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#approveModal' . $row['id'] . '">
-                                                <i class="fa fa-check" aria-hidden="true"></i> Approve
-                                              </button>
-                                              <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#disapproveModal' . $row['id'] . '">
-                                                <i class="fa fa-times" aria-hidden="true"></i> Disapprove
-                                              </button>';
-                                        }
+                                        </tr><?php
 
-                                        // View button to show details
-                                        echo '<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
-                                            <i class="fa fa-eye" aria-hidden="true"></i> Edit Status
-                                          </button>
-
-                                          <form method="POST" action="archive.php">
-                                                <!-- Input the ID of the record you want to archive -->
-                                                <input type="hidden" name="id" value="' . $row['id'] . '"> <!-- Change the value to the appropriate ID -->
-                                                <input type="hidden" name="table" value="payment_receipts">
-                                                
-                                                <!-- Button to trigger the archive -->
-                                                <button type="submit" name="archive" value="1">Archive</button>
-                                            </form>
-                                        </td>
-                                        
-                                    </tr>';
-
-                                        // Include the view modal with complete user details
-                                        echo '<div class="modal fade" id="viewModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                                // Include the view modal with complete user details
+                                                echo '<div class="modal fade" id="viewModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -183,8 +181,8 @@ include('main_style.php');
                                                 </div>
                                             </div>
                                         </div>';
-                                    }
-                                    ?>
+                                            }
+                                                ?>
                                 </tbody>
                             </table>
                         </div>

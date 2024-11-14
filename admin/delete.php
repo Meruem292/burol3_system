@@ -12,12 +12,12 @@ if (isset($_POST['archive'])) {
     $table = $_POST['table'];
 
     // Call the archiveData function to archive the record
-    $result = archiveData($pdo, $table, $id);
+    $result = delateData($pdo, $table, $id);
 
     // Redirect back to the previous page
     if ($result) {
         // Use HTTP_REFERER to go back to the last visited page
-        logAction($pdo, $_SESSION['role'], "Archived a record from $table");
+        logAction($pdo, $_SESSION['role'], "Delete a record from $table");
         
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();

@@ -4,10 +4,10 @@ require "db.php";
 
 $user_requests = [];
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['id'])) {
     // If the user is logged in, retrieve their full name
-    $stmt = $pdo->prepare("SELECT full_name FROM user WHERE user_id = :user_id");
-    $stmt->execute([':user_id' => $_SESSION['user_id']]);
+    $stmt = $pdo->prepare("SELECT full_name FROM user WHERE id = :id");
+    $stmt->execute([':id' => $_SESSION['id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {

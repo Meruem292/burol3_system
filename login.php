@@ -15,7 +15,7 @@ if (isset($_POST['login'])) {
         if ($user) {
             if ($user['status'] === "Approved") {
                 if (password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['user_id'];
+                    $_SESSION['id'] = $user['id'];
                     $_SESSION['full_name'] = $user['full_name'];
                     header("Location: index.php");
                     exit();

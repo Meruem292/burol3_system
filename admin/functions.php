@@ -462,7 +462,7 @@ if (isset($_POST['btn_edit_resident'])) {
     include('db.php');
 
     // Get the data from POST, applying sanitization
-    $user_id = filter_var($_POST['resident_id'], FILTER_SANITIZE_NUMBER_INT);
+    $id = filter_var($_POST['resident_id'], FILTER_SANITIZE_NUMBER_INT);
     $full_name = filter_var($_POST['edit_full_name']);
     $email = filter_var($_POST['edit_email'], FILTER_SANITIZE_EMAIL);
     $mobile_number = filter_var($_POST['edit_mobile_number']);
@@ -472,7 +472,7 @@ if (isset($_POST['btn_edit_resident'])) {
 
     // Update statement with parameterized query for security
     $stmt = $pdo->prepare("UPDATE user SET full_name = :full_name, email = :email, mobile_number = :mobile_number, 
-                            date_of_birth = :date_of_birth, gender = :gender, status = :status WHERE user_id = :user_id");
+                            date_of_birth = :date_of_birth, gender = :gender, status = :status WHERE id = :id");
     $stmt->execute([
         ':full_name' => $full_name,
         ':email' => $email,
@@ -480,7 +480,7 @@ if (isset($_POST['btn_edit_resident'])) {
         ':date_of_birth' => $date_of_birth,
         ':gender' => $gender,
         ':status' => $status,
-        ':user_id' => $user_id
+        ':id' => $id
     ]);
 
     // Redirect to avoid form resubmission on refresh
@@ -488,7 +488,8 @@ if (isset($_POST['btn_edit_resident'])) {
     exit();
 }
 
-function archiveData($pdo, $table, $id) {
+function archiveData($pdo, $table, $id)
+{
     try {
         // Check if the table exists
         $stmt = $pdo->prepare("SHOW TABLES LIKE :table");
@@ -498,13 +499,11 @@ function archiveData($pdo, $table, $id) {
             return "Error: Table '$table' does not exist.";
         }
 
-        // Prepare the update query to archive the record
         $sql = "UPDATE $table SET is_archive = 1 WHERE id = :id";
         $stmt = $pdo->prepare($sql);
-        
         // Bind the parameters
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        
+
         // Execute the statement
         if ($stmt->execute()) {
             return "Record archived successfully.";
@@ -515,4 +514,29 @@ function archiveData($pdo, $table, $id) {
         return "Error: " . $e->getMessage();
     }
 }
-?>
+
+function delateData($pdo, $table, $id){
+    try {
+        // Check if the table exists
+        $stmt = $pdo->prepare("SHOW TABLES LIKE :table");
+        $stmt->execute([':table' => $table]);
+
+        if ($stmt->rowCount() == 0) {
+            return "Error: Table '$table' does not exist.";
+        }
+
+        $sql = "DELETE FROM $table WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        // Bind the parameters
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            return "Record deleted successfully.";
+        } else {
+            return "Error: Unable to delete record.";
+        }
+    } catch (PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
+}

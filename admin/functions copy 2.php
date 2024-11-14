@@ -90,12 +90,12 @@ if (isset($_POST['edit_resident_status'])) {
     $residentId = $_POST['resident_id'];
     $residentStatus = $_POST['resident_status'];
 
-    $sql = "UPDATE user SET status = :status WHERE user_id = :user_id";
+    $sql = "UPDATE user SET status = :status WHERE id = :id";
     $stmt = $pdo->prepare($sql);
 
     try {
         $stmt->bindParam(':status', $residentStatus);
-        $stmt->bindParam(':user_id', $residentId);
+        $stmt->bindParam(':id', $residentId);
         $stmt->execute();
         return "Resident status updated successfully!";
     } catch (PDOException $e) {

@@ -2,17 +2,17 @@
 session_start();
 require "db.php";
 
-if (isset($_SESSION["user_id"])) {
+if (isset($_SESSION["id"])) {
     // If the user is logged in, retrieve user information
-    $stmt = $pdo->prepare("SELECT * FROM user WHERE user_id = :id");
-    $stmt->execute([':id' => $_SESSION["user_id"]]);
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+    $stmt->execute([':id' => $_SESSION["id"]]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $full_name = $user['full_name'];
 }
 
-// Access the 'user_id' session variable only if it is set
-$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+// Access the 'id' session variable only if it is set
+$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
 
 ?>
@@ -78,7 +78,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
                     <li><a class="nav-link scrollto" href="track_request.php">Track Request</a></li>
                     <?php
-                    if (!isset($user_id)) {
+                    if (!isset($id)) {
                         echo '<li><a class="getstarted scrollto" href="login.php">Login</a></li>';
                     } else {
                         echo '<li><a class="getstarted scrollto" href="logout.php">Logout</a></li>';

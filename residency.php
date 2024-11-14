@@ -36,17 +36,17 @@ function generateControlNumber()
     return $controlNumber;
 }
 
-if (isset($_SESSION["user_id"])) {
+if (isset($_SESSION["id"])) {
     // If the user is logged in, retrieve user information
-    $stmt = $pdo->prepare("SELECT * FROM user WHERE user_id = :id");
-    $stmt->execute([':id' => $_SESSION["user_id"]]);
+    $stmt = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+    $stmt->execute([':id' => $_SESSION["id"]]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 }else{
     header("Location: login.php");
 }   
 
-// Access the 'user_id' session variable only if it is set
-$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+// Access the 'id' session variable only if it is set
+$id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
 if (isset($_POST['add_certificate_residency'])) {
     $complete_name = trim($_POST['complete_name']);
@@ -182,16 +182,16 @@ function getGcashMOP()
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-                    <li><a class="nav-link scrollto" href="#swiper">Announcement</a></li>
-                    <li><a class="nav-link scrollto" href="#about">About</a></li>
-                    <li><a class="nav-link scrollto" href="#services">Services</a></li>
-                    <li><a class="nav-link scrollto" href="#team">Brgy. Official</a></li>
+                    <li><a class="nav-link scrollto active" href="index.php">Home</a></li>
+                    <li><a class="nav-link scrollto" href="index.php">Announcement</a></li>
+                    <li><a class="nav-link scrollto" href="index.php">About</a></li>
+                    <li><a class="nav-link scrollto" href="index.php">Services</a></li>
+                    <li><a class="nav-link scrollto" href="index.php">Brgy. Official</a></li>
 
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    <li><a class="nav-link scrollto" href="track_request.php">Track Request</a></li>
+                    <li><a class="nav-link scrollto" href="index.php">Contact</a></li>
+                    <li><a class="nav-link scrollto" href="#" data-bs-toggle="modal" data-bs-target="#trackRequestModal">Track Request</a></li>
                     <?php
-                    if (!isset($user_id)) {
+                    if (!isset($id)) {
                         echo '<li><a class="getstarted scrollto" href="login.php">Login</a></li>';
                     } else {
                         echo '<li><a class="getstarted scrollto" href="logout.php">Logout</a></li>';
@@ -204,6 +204,46 @@ function getGcashMOP()
 
         </div>
     </header><!-- End Header -->
+    <div class="modal fade" id="trackRequestModal" tabindex="-1" aria-labelledby="trackRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="trackRequestModalLabel">Track Your Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if ($id == null) { ?>
+                        <form id="trackRequestForm">
+                            <div class="mb-3">
+                                <label for="trackingNumber" class="form-label">Tracking Number</label>
+                                <input type="text" class="form-control" id="trackingNumber" placeholder="Enter your tracking number">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Check Status</button>
+                        </form>
+                    <?php } ?>
+                    <!-- Datatable to display request details -->
+                    <!-- Datatable to display request details (initially hidden) -->
+                    <div class="mt-3 d-none" id="trackingTableContainer">
+                        <table id="trackingTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tracking #</th>
+                                    <th>Delivery Address</th>
+                                    <th>Type</th>
+                                    <th>Delivery_mode</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trackingTableBody">
+                                <!-- Data will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section style="margin-top: 50px;">
         <div class="container">
@@ -394,6 +434,120 @@ function getGcashMOP()
     <script src="assets/js/main.js"></script>
     <script src="assets/js/sweetalert.js"></script>
 
+    <script>
+        document.getElementById('trackRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
+            const trackingNumber = document.getElementById('trackingNumber').value;
+
+            if (trackingNumber) {
+                // Make an AJAX request to check the status and retrieve details
+                fetch('track_status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            tracking_number: trackingNumber
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const trackingTableBody = document.getElementById('trackingTableBody');
+                        const trackingTableContainer = document.getElementById('trackingTableContainer');
+
+                        trackingTableBody.innerHTML = ''; // Clear previous results
+
+                        if (data.success) {
+                            const details = data.data;
+
+                            // Determine status color based on the status value
+                            let statusClass = '';
+                            if (details.status === 'Pending') {
+                                statusClass = 'bg-warning text-dark';
+                            } else if (details.status === 'Approved') {
+                                statusClass = 'bg-success text-white';
+                            } else if (details.status === 'Disapproved') {
+                                statusClass = 'bg-danger text-white';
+                            }
+
+                            // Append the row dynamically to the table
+                            trackingTableBody.innerHTML = `
+                    <tr>
+                        <td>${details.tracking_number}</td>
+                        <td>${details.full_name}</td>
+                        <td>${details.address}</td>
+                        <td>${details.purpose}</td>
+                        <td>${details.type}</td>
+                        <td>${request.delivery_mode}</td>
+                        <td><span class="${statusClass}" style="padding: 3px 5px; border-radius: 4px;">${details.status}</span></td>
+                        
+                    </tr>
+                `;
+
+
+                            trackingTableContainer.classList.remove('d-none');
+
+
+                            $('#trackingTable').DataTable({
+                                destroy: true,
+                                paging: true,
+                                searching: true,
+                                ordering: true,
+                                responsive: true
+                            });
+
+                        } else {
+                            // Hide the table if no data is found
+                            trackingTableContainer.classList.add('d-none');
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                alert('Please enter a tracking number.');
+            }
+        });
+    </script>
+
+    <script>
+        // Fetch the user's requests when the page loads
+        fetch('fetch_user_requests.php')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('trackingTableBody');
+                tableBody.innerHTML = ''; // Clear the table body
+
+                // Check if there are any requests
+                if (data.length > 0) {
+                    data.forEach(request => {
+                        let statusClass = '';
+
+                        // Determine the status class based on the request status
+                        if (request.status === 'Pending') {
+                            statusClass = 'bg-warning text-dark';
+                        } else if (request.status === 'Approved') {
+                            statusClass = 'bg-success text-white';
+                        } else if (request.status === 'Disapproved') {
+                            statusClass = 'bg-danger text-white';
+                        }
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td>${request.tracking_number}</td>
+                        <td>${request.address}</td> 
+                        <td>${request.type}</td>
+                        <td>${request.delivery_mode}</td>
+                        <td><span class="${statusClass}" style="padding: 3px 5px; border-radius: 4px;">${request.status}</span></td>
+                    `;
+                        tableBody.appendChild(row);
+                    });
+                    document.getElementById('trackingTableContainer').classList.remove('d-none'); // Show the table
+                }
+            })
+            .catch(error => console.error('Error fetching user requests:', error));
+    </script>
     <script>
         function toggleFields() {
             const deliveryMode = document.getElementById('deliveryMode').value;

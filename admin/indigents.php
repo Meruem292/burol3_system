@@ -58,20 +58,20 @@ if (!isset($_SESSION['role'])) {
                                     <?php
                                     $query = $pdo->query("SELECT * FROM indigents ORDER BY created_at DESC");
                                     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                        echo '
+                                        ?>
                                         <tr>
-                                            <td>' . $row['id'] . '</td>
-                                            <td>' . $row['full_name'] . '</td>
-                                            <td>' . $row['age'] . '</td>
-                                            <td>' . $row['address'] . '</td>
-                                            <td>' . $row['contact_number'] . '</td>
-                                            <td>' . $row['created_at'] . '</td>
+                                            <td><?php echo $row['id']?></td>
+                                            <td><?php echo $row['full_name']?></td>
+                                            <td><?php echo $row['age']?></td>
+                                            <td><?php echo $row['address']?></td>
+                                            <td><?php echo $row['contact_number']?></td>
+                                            <td><?php echo $row['created_at']?></td>
                                             <td>
-                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editIndigentModal' . $row['id'] . '">Edit</button>
-                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteIndigentModal' . $row['id'] . '">Delete</button>
+                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editIndigentModal<?php echo $row['id']?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteIndigentModal<?php echo $row['id']?>"><i class="fa fa-trash"></i> Delete</button>
                                             </td>
                                         </tr>
-                                        ';
+                                        <?php
                                         include "modals/edit_modal_indigents.php";
                                         include "modals/delete_modal_indigents.php";
                                     }

@@ -335,7 +335,7 @@ INSERT INTO `prices` (`id`, `doc_type`, `price`) VALUES
 --
 
 CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `full_name` varchar(255) NOT NULL,
   `date_of_birth` date NOT NULL,
   `age` varchar(255) NOT NULL,
@@ -374,7 +374,7 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `full_name`, `date_of_birth`, `age`, `email`, `password`, `mobile_number`, `gender`, `village`, `phase`, `blk`, `street`, `id_type`, `id_number`, `issued_authority`, `issued_state`, `issued_date`, `expiry_date`, `address_type`, `nationality`, `state`, `district`, `block_number`, `father_name`, `mother_name`, `grandfather`, `spouse_name`, `father_in_law`, `mother_in_law`, `status`, `profile_img`, `category`, `is_archive`) VALUES
+INSERT INTO `user` (`id`, `full_name`, `date_of_birth`, `age`, `email`, `password`, `mobile_number`, `gender`, `village`, `phase`, `blk`, `street`, `id_type`, `id_number`, `issued_authority`, `issued_state`, `issued_date`, `expiry_date`, `address_type`, `nationality`, `state`, `district`, `block_number`, `father_name`, `mother_name`, `grandfather`, `spouse_name`, `father_in_law`, `mother_in_law`, `status`, `profile_img`, `category`, `is_archive`) VALUES
 (13, 'WENNYL CALUMBA ROMERO', '2023-02-25', '0', 'newroskoto@gmail.com', '$2y$10$0IySnvw9l405JjPbB77Q5u2.OY1v4o0lSZnW5VZWL0rz347t4uCwO', '09553471926', 'Female', 'Accacia Homes', '1', 'Blk D 8 Lot 16', 'JP RIZAL', 'Philhealth', '533', 'None', 'CAVITE', '2024-10-25', '2024-10-25', 'Permanent', 'Filipino', 'CAVITE', 'District', 3216, 'Ariel Romero', 'Wennyl Romero', 'Patricio Romero', 'Nancy Momoland', 'Father of Nancy', 'Mother of Nancy', 'Approved', 'gcash.jpg', 'Adult', 0);
 
 -- --------------------------------------------------------
@@ -470,7 +470,7 @@ ALTER TABLE `prices`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `voters`
@@ -546,7 +546,7 @@ ALTER TABLE `prices`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `voters`

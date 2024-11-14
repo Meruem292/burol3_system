@@ -1,5 +1,5 @@
 
-<?php echo '<div id="viewModalResident'.$row['user_id'].'" class="modal fade">
+<?php echo '<div id="viewModalResident'.$row['id'].'" class="modal fade">
 <form method="post">
   <div class="modal-dialog modal-sm" style="width:500px !important;">
     <div class="modal-content">
