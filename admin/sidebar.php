@@ -105,6 +105,11 @@ $PendingBlotterCount = getPendingBlotterCount($pdo);
                     <i class="fa fa-user"></i> <span>Indigents</span>
                 </a>
             </li>
+            <li>
+                <a href="all_archives.php">
+                    <i class="fa fa-archive"></i> <span>Archives</span>
+                </a>
+            </li>
 
 
         </ul>

@@ -49,29 +49,39 @@ if (!isset($_SESSION['role'])) {
                                         <th>Full Name</th>
                                         <th>Age</th>
                                         <th>Address</th>
-                                        <th>Contact Number</th> 
+                                        <th>Contact Number</th>
                                         <th>Created At</th>
                                         <th>Options</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $query = $pdo->query("SELECT * FROM indigents ORDER BY created_at DESC");
+                                    $query = $pdo->query("SELECT * FROM indigents WHERE is_archive = 0  ORDER BY created_at DESC");
                                     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                        ?>
+                                    ?>
                                         <tr>
-                                            <td><?php echo $row['id']?></td>
-                                            <td><?php echo $row['full_name']?></td>
-                                            <td><?php echo $row['age']?></td>
-                                            <td><?php echo $row['address']?></td>
-                                            <td><?php echo $row['contact_number']?></td>
-                                            <td><?php echo $row['created_at']?></td>
+                                            <td><?php echo $row['id'] ?></td>
+                                            <td><?php echo $row['full_name'] ?></td>
+                                            <td><?php echo $row['age'] ?></td>
+                                            <td><?php echo $row['address'] ?></td>
+                                            <td><?php echo $row['contact_number'] ?></td>
+                                            <td><?php echo $row['created_at'] ?></td>
                                             <td>
-                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editIndigentModal<?php echo $row['id']?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
-                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteIndigentModal<?php echo $row['id']?>"><i class="fa fa-trash"></i> Delete</button>
+                                                <div style="display: flex; gap: 5px;">
+                                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editIndigentModal<?php echo $row['id'] ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+
+                                                    <form method="post" action="archive.php">
+                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>" />
+                                                        <input type="hidden" name="table" value="indigents" />
+                                                        <button type="submit" name="archive" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to archive this log?')"><i class="fa fa-archive"></i> Archive</button>
+                                                    </form>
+
+                                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteIndigentModal<?php echo $row['id'] ?>"><i class="fa fa-trash"></i> Delete</button>
+
+                                                </div>
                                             </td>
                                         </tr>
-                                        <?php
+                                    <?php
                                         include "modals/edit_modal_indigents.php";
                                         include "modals/delete_modal_indigents.php";
                                     }
@@ -80,7 +90,7 @@ if (!isset($_SESSION['role'])) {
                             </table>
                         </div>
                     </div><!-- /.box -->
-                </section>  
+                </section>
             </aside>
         </div>
 
@@ -101,7 +111,8 @@ if (!isset($_SESSION['role'])) {
             });
         </script>
 
-    <?php include "footer.php"; ?>
+        <?php include "footer.php"; ?>
     </body>
 <?php } ?>
+
 </html>
