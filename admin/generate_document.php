@@ -1,165 +1,260 @@
-<!DOCTYPE html>
-<html id="clearance">
-
-<style>
-    @media print {
-        .noprint {
-            visibility: hidden;
-        }
-
-        .print-bg {
-            background-color: #01aefd;
-            width: 81.6rem;
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-    }
-
-    @page {
-        size: auto;
-        margin: 4mm;
-    }
-
-    h5 {
-        font-family: 'Times New Roman', Times, serif !important;
-        font-weight: bold !important;
-        margin: 0 !important;
-    }
-
-    p {
-        font-family: 'Times New Roman', Times, serif !important;
-    }
-</style>
-
 <?php
 session_start();
 if (!isset($_SESSION['role'])) {
     header("Location: login.php");
-} else {
-    ob_start();
-    include "db.php";
-    $_SESSION['clr'] = $_GET['clearance'];
-    include('main_style.php');
+    exit;
+}
 
+include "db.php";
+$documentId = $_GET['clearance'] ?? null;
+$deliveryMode = $_GET['delivery_mode'] ?? '';
 
-    $deliveryMode = $_GET['delivery_mode'] ?? ''; // Adjust according to your logic
-    $documentId = $_GET['clearance'];
-
-    // Update the category based on delivery mode
-    $newCategory = '';
-    if ($deliveryMode === 'delivery') {
-        $newCategory = 'for delivery';
-    } elseif ($deliveryMode === 'pick-up') {
-        $newCategory = 'for pick-up';
+if ($documentId) {
+    $newCategory = ($deliveryMode === 'delivery') ? 'for delivery' : (($deliveryMode === 'pick-up') ? 'for pick-up' : '');
+    if ($newCategory) {
+        $updateQuery = $pdo->prepare("UPDATE documents SET category = :category WHERE id = :id");
+        $updateQuery->execute(['category' => $newCategory, 'id' => $documentId]);
     }
 
-    if (!empty($newCategory) && !empty($documentId)) {
-        $updateCategory = $pdo->prepare("UPDATE documents SET category = '$newCategory' WHERE id = '$documentId'");
-        $updateCategory->execute();
-    }
+    $documentQuery = $pdo->prepare("SELECT * FROM documents WHERE id = :id");
+    $documentQuery->execute(['id' => $documentId]);
+    $documentData = $documentQuery->fetch(PDO::FETCH_ASSOC);
 
-    
-    $generatePrintData = $pdo->query("SELECT * FROM documents WHERE id = '$documentId'");
-    $rowData = $generatePrintData->fetch(PDO::FETCH_ASSOC);
-
-    $day = date('j');
-    $month = date('F');
-    $year = date('Y');
-
-    function getDaySuffix($day)
-    {
-        if ($day >= 11 && $day <= 13) {
-            return 'th';
-        }
-        switch ($day % 10) {
-            case 1:
-                return 'st';
-            case 2:
-                return 'nd';
-            case 3:
-                return 'rd';
-            default:
-                return 'th';
-        }
-    }
-
-    $formatted_date = "<p style=\"font-size: 18px; text-indent: 30px;\">Issued this <u>" . $day . getDaySuffix($day) . "</u> day of <u>" . $month . "</u> " . $year . ".</p>";
-
+    $officialsQuery = $pdo->query("SELECT * FROM officials");
+}
 ?>
+<!DOCTYPE html>
+<html lang="en" id="clearance">
 
-    <body class="skin-black">
-        
-        <div>
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 20px;">
-                <div class="header-img">
-                    <img src="assets/img/header.png">
-                </div>
-                <div class="print-bg" style="background-color: #01aefd; width: 81.6rem; padding: 20px; display: flex; gap: 10px; margin-bottom: 10px;">
-                    <div class="col-md-4" style="background-color: white; padding: 20px 0;">
-                        <h3 class="text-center" style="font-family: 'Times New Roman', Times, serif; margin-bottom: 20px; margin-top: 0; font-weight: bold;">Barangay Officials</h3>
-                        <?php
-                        $officialSelect = $pdo->query("SELECT * FROM officials");
-                        while ($row = $officialSelect->fetch(PDO::FETCH_ASSOC)) {
-                        ?>
-                            <div style="display: flex; flex-direction: column; text-align: center; margin-bottom: 20px;">
-                                <h5><?= strtoupper($row['full_name']) ?></h5>
-                                <p><?= strtoupper($row['position']) ?></p>
-                            </div>
-                        <?php
-                        }
-                        ?>
-                        <div style="display: flex; flex-direction: column; text-align: center; margin-bottom: 20px; margin-top: 70px;">
-                            <p>Control No. <u><?= strtoupper($rowData['control_number']) ?></u></p>
-                        </div>
-                    </div>
-                    <div class="col-md-8" style="background-color: white; padding: 20px; position: relative;">
-                        <img src="assets/img/logo.png" style="opacity: 15%; position: absolute; width: 450px; top: 50%; left: 50%; transform: translate(-50%, -50%);" alt="">
-                        <div style="position: relative; z-index: 3;">
-                            <h3 class="text-center" style="font-family: 'Times New Roman', Times, serif; margin-bottom: 20px; margin-top: 0; font-weight: bold;"><?= strtoupper($rowData['type']) ?></h3>
-                            <p style="margin-bottom: 10px;">TO WHOM IT MAY CONCERN:</p>
-                            <p style="font-size: 18px; text-indent: 30px;">This is to certify that <u><?= strtoupper($rowData['full_name']) ?></u> is a resident of <u><?= strtoupper($rowData['address']) ?> BARANGAY BUROL III, CITY OF DASMARINAS, CAVITE</u> since <u><?= strtoupper($rowData['year_residency']) ?></u> up to present.</p>
-                            <p style="font-size: 18px; text-indent: 30px;">He/She is not a registered voter of this barangay.</p>
-                            <p style="font-size: 18px; text-indent: 30px;">This certification is issued upon the request of the said person for <u><?= strtoupper($rowData['purpose']) ?></u> purpose/s only.</p>
-                            <?= $formatted_date; ?>
-                            <div style="display: flex; align-items: center; justify-content: space-around; gap: 20px; margin-top: 100px;">
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                                        <div style="width: 80px; height: 100px; border: 1px solid black; background-color: white;"></div>
-                                        <p style="margin: 0 !important; font-size: 10px;">LEFT THUMBMARK</p>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
-                                        <div style="width: 80px; height: 100px; border: 1px solid black; background-color: white;"></div>
-                                        <p style="margin: 0 !important; font-size: 10px;">RIGHT THUMBMARK</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="width: 200px; height: 1px; background-color: black; margin-bottom: 5px;"></div>
-                                    <p class="text-center">Resident's Signature</p>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; justify-content: space-around; gap: 20px; margin-top: 100px;">
-                                <div style="border: 1px solid black; padding: 5px 10px;">
-                                    <p style="font-size: 10px; font-weight: bold; margin: 0 !important;">*NOT VALID WITHOUT OFFICIAL SEAL</p>
-                                    <p style="font-size: 10px; margin: 0 !important;">*VALIDITY of this DOCUMENT:</p>
-                                    <p style="font-size: 10px; margin: 0 !important;">3 months after the date of issuance</p>
-                                </div>
-                                <div class="text-center">
-                                    <p style="font-size: 20px; font-weight: bold; margin: 0 !important;">ALMA M. LAPNO</p>
-                                    <P>PUNONG BARANGAY</P>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-success noprint" id="printpagebutton" onclick="PrintElem('#clearance')">Print</button>
-            </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Barangay Clearance</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .page-container {
+            width: 210mm;
+            /* A4 width */
+            height: 297mm;
+            /* A4 height */
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header-img img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .clearance-content {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            background-color: #01aefd;
+            padding: 20px;
+            height: calc(100% - 60px);
+            /* Ensures the content fits inside the page container */
+            box-sizing: border-box;
+        }
+
+        .officials-section {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .document-section {
+            flex: 2;
+            position: relative;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .document-section img {
+            position: absolute;
+            opacity: 0.1;
+            width: 80%;
+            height: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .document-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .signature-section,
+        .thumb-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .thumb-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .thumb-box div {
+            width: 80px;
+            height: 100px;
+            border: 1px solid black;
+            background-color: white;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .print-note {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+
+        .action-buttons {
+            position: absolute;
+            /* Place the buttons below the page */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            /* Layer above other elements */
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+            /* Avoid additional margins */
+        }
+
+        .btn-print {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-close {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 130px;
+            /* Increased margin to push it 100px lower */
+        }
+
+
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .noprint,
+            .action-buttons {
+                display: none;
+            }
+
+            .page-container {
+                width: 210mm;
+                height: 277mm;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            .clearance-content {
+                background-color: #01aefd !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                /* Sets A4 size explicitly */
+                margin: 0;
+                /* Removes default page margins */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="header-img">
+            <img src="assets/img/header.png" alt="Header Image">
         </div>
 
-        <!-- jQuery 2.0.2 -->
-    <?php }
-    ?>
+        <div class="clearance-content">
+            <!-- Officials Section -->
+            <div class="officials-section">
+                <h3 class="text-center">Barangay Officials</h3>
+                <?php while ($official = $officialsQuery->fetch(PDO::FETCH_ASSOC)): ?>
+                    <div class="text-center">
+                        <h5><?= strtoupper($official['full_name']) ?></h5>
+                        <p><?= strtoupper($official['position']) ?></p>
+                    </div>
+                <?php endwhile; ?>
+                <div class="text-center" style="margin-top: 50px;">
+                    <p>Control No.: <u><?= $documentData['control_number'] ?? '' ?></u></p>
+                </div>
+            </div>
+
+            <!-- Document Section -->
+            <div class="document-section">
+                <img src="assets/img/logo.png" alt="Barangay Logo">
+                <div class="document-content">
+                    <h3 class="text-center"><?= strtoupper($documentData['type'] ?? '') ?></h3>
+                    <p>TO WHOM IT MAY CONCERN:</p>
+                    <p>This is to certify that <u><?= strtoupper($documentData['full_name'] ?? '') ?></u> is a resident of <u><?= strtoupper($documentData['address'] ?? '') ?></u> since <u><?= strtoupper($documentData['year_residency'] ?? '') ?></u> up to present.</p>
+                    <p>He/She is not a registered voter of this barangay.</p>
+                    <p>This certification is issued upon the request of the said person for <u><?= strtoupper($documentData['purpose'] ?? '') ?></u> purpose/s only.</p>
+                    <p>Issued this <u><?= date('jS') ?></u> day of <u><?= date('F') ?></u>, <?= date('Y') ?>.</p>
+                </div>
+
+                <!-- Signature Section -->
+                <div class="signature-section">
+                    <div class="thumb-box">
+                        <div></div>
+                        <p>LEFT THUMBMARK</p>
+                    </div>
+                    <div class="thumb-box">
+                        <div></div>
+                        <p>RIGHT THUMBMARK</p>
+                    </div>
+                    <div class="text-center">
+                        <div style="width: 200px; height: 1px; background: black;"></div>
+                        <p>Resident's Signature</p>
+                    </div>
+                </div>
+
+                <div class="print-note">
+                    <p>*NOT VALID WITHOUT OFFICIAL SEAL</p>
+                    <p>*VALIDITY: 3 months after issuance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Action Buttons -->
+    <div class="action-buttons noprint">
+        <button type="button" class="btn btn-success" onclick="window.print()">Print</button>
+        <button type="button" class="btn btn-danger" onclick="window.history.back()">Close</button>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
         function PrintElem(elem) {
             window.print();
@@ -187,8 +282,7 @@ if (!isset($_SESSION['role'])) {
             return true;
         }
     </script>
-    </body>
 
-
+</body>
 
 </html>

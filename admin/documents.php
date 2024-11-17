@@ -136,6 +136,8 @@ if (!isset($_SESSION['role'])) {
                                                                 </form>
 
                                                                 
+
+                                                                
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -224,6 +226,8 @@ if (!isset($_SESSION['role'])) {
                                                                     <input type="hidden" name="table" value="documents" />
                                                                     <button type="submit" name="archive" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
                                                                 </form>
+
+                                                                <a href="generate_document.php?clearance=<?= $row['id']?>&delivery_mode=<?= $row['delivery_mode']?>" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Generate</a>
 
                                                                 
                                                             </div>
