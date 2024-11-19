@@ -1,4 +1,4 @@
-<?php include('functions.php');?>
+
 <div id="editResidentModal<?php echo $row['id']; ?>" class="modal fade">
     <form method="post">
         <div class="modal-dialog">

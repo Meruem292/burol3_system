@@ -183,10 +183,11 @@ if (isset($_POST['btn_add_voter'])) {
     $voter_age = $_POST['voter_age'];
     $voter_contact = $_POST['voter_contact'];
     $voter_address = $_POST['voter_address'];
+    $precint_no = $_POST['precint_no'];
 
     // Insert the voter entry into the 'voters' table
-    $query = $pdo->prepare("INSERT INTO `voters`(`id`, `full_name`, `age`, `address`, `contact_number`, `created_at`) VALUES (NULL, ?, ?, ?, ?, NOW())");
-    $success = $query->execute([$voter_name, $voter_contact, $voter_address, $voter_age]);
+    $query = $pdo->prepare("INSERT INTO `voters`(`id`,`precint_no`, `full_name`, `age`, `address`, `contact_number`, `created_at`) VALUES (NULL,?, ?, ?, ?, ?, NOW())");
+    $success = $query->execute([$precint_no, $voter_name, $voter_contact, $voter_address, $voter_age]);
 
     // Check if the insertion was successful
     if ($success) {
@@ -215,11 +216,12 @@ if (isset($_POST['btn_edit_voter'])) {
     $voter_contact = $_POST['edit_voter_contact'];
     $voter_address = $_POST['edit_voter_address'];
     $voter_age = $_POST['edit_voter_age'];
+    $ddl_status = $_POST['ddl_status'];
 
     // Update the voter entry
-    $query = $pdo->prepare("UPDATE voters SET full_name = ?, contact_number = ?, address = ?, age = ? WHERE id = ?");
+    $query = $pdo->prepare("UPDATE voters SET full_name = ?, contact_number = ?, address = ?, age = ?, status = ? WHERE id = ?");
 
-    $success = $query->execute([$voter_name, $voter_contact, $voter_address, $voter_age, $voter_id]);
+    $success = $query->execute([$voter_name, $voter_contact, $voter_address, $voter_age, $ddl_status, $voter_id]);
 
     if ($success) {
         // Log the action

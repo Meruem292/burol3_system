@@ -116,12 +116,12 @@ include('main_style.php');
 
                                             <div style="display: flex; gap: 5px;">
                                                 <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit Status
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit Status
                                                 </button>
 
                                                 <form method="POST" action="archive.php">
                                                     <!-- Input the ID of the record you want to archive -->
-                                                    <input type="hidden" name="id" value="' . $row['id'] . '"> <!-- Change the value to the appropriate ID -->
+                                                    <input type="hidden" name="id" value=<?= $row['id'] ?>> <!-- Change the value to the appropriate ID -->
                                                     <input type="hidden" name="table" value="payment_receipts">
 
                                                     <!-- Button to trigger the archive -->

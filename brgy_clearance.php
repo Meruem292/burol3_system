@@ -279,7 +279,7 @@ function getGcashMOP()
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Complete Name: <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Enter your complete name" name="complete_name" value="<?= !isset($user['full_name']) ? "" : $user['full_name'] ?>" required class="form-control">
+                                <input type="text" placeholder="Enter your complete name" name="complete_name" value="<?= !isset($user['full_name']) ? "" : $user['full_name'] ?>" required class="form-control" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Purpose: <span class="text-danger">*</span></label>

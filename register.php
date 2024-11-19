@@ -3,7 +3,7 @@
 require "db.php";
 session_start();
 
-if (isset($_POST['add_resident'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $date_of_birth = $_POST['date_of_birth'];
     $email = $_POST['email'];
@@ -13,23 +13,11 @@ if (isset($_POST['add_resident'])) {
     $phase = $_POST['phase'];
     $blk = $_POST['blk'];
     $street = $_POST['street'];
-    $id_type = $_POST['id_type'];
-    $id_number = $_POST['id_number'];
-    $issued_authority = $_POST['issued_authority'];
-    $issued_state = $_POST['issued_state'];
-    $issued_date = $_POST['issued_date'];
-    $expiry_date = $_POST['expiry_date'];
     $address_type = $_POST['address_type'];
     $nationality = $_POST['nationality'];
     $state = $_POST['state'];
     $district = $_POST['district'];
     $block_number = $_POST['block_number'];
-    $father_name = $_POST['father_name'];
-    $mother_name = $_POST['mother_name'];
-    $grandfather = $_POST['grandfather'];
-    $spouse_name = $_POST['spouse_name'];
-    $father_in_law = $_POST['father_in_law'];
-    $mother_in_law = $_POST['mother_in_law'];
     $category = $_POST['category'];
 
     $profile_img = $_FILES['profile_img']['name'];
@@ -44,8 +32,6 @@ if (isset($_POST['add_resident'])) {
     $now = new DateTime();
     $age = $now->diff($dob)->y;
 
-    $hashed_password = password_hash($email, PASSWORD_DEFAULT);
-
     try {
         $stmt = $pdo->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->execute([':email' => $email]);
@@ -57,8 +43,8 @@ if (isset($_POST['add_resident'])) {
         } else {
             // Attempt to move the uploaded file to the target directory
             if (move_uploaded_file($profile_img_tmp, $target_file)) {
-                $sql = "INSERT INTO user (full_name, date_of_birth, age, email, password, mobile_number, gender, village, phase, blk, street, id_type, id_number, issued_authority, issued_state, issued_date, expiry_date, address_type, nationality, state, district, block_number, father_name, mother_name, grandfather, spouse_name, father_in_law, mother_in_law, profile_img, category) 
-                VALUES (:full_name, :date_of_birth, :age, :email, :password, :mobile_number, :gender, :village, :phase, :blk, :street, :id_type, :id_number, :issued_authority, :issued_state, :issued_date, :expiry_date, :address_type, :nationality, :state, :district, :block_number, :father_name, :mother_name, :grandfather, :spouse_name, :father_in_law, :mother_in_law, :profile_img, :category)";
+                $sql = "INSERT INTO user (full_name, date_of_birth, age, email, mobile_number, gender, village, phase, blk, street, address_type, nationality, state, district, block_number, profile_img, category) 
+                VALUES (:full_name, :date_of_birth, :age, :email, :mobile_number, :gender, :village, :phase, :blk, :street, :address_type, :nationality, :state, :district, :block_number, :profile_img, :category)";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
@@ -66,34 +52,21 @@ if (isset($_POST['add_resident'])) {
                     ':date_of_birth' => $date_of_birth,
                     ':age' => $age,
                     ':email' => $email,
-                    ':password' => $hashed_password,
                     ':mobile_number' => $mobile_number,
                     ':gender' => $gender,
                     ':village' => $village,
                     ':phase' => $phase,
                     ':blk' => $blk,
                     ':street' => $street,
-                    ':id_type' => $id_type,
-                    ':id_number' => $id_number,
-                    ':issued_authority' => $issued_authority,
-                    ':issued_state' => $issued_state,
-                    ':issued_date' => $issued_date,
-                    ':expiry_date' => $expiry_date,
                     ':address_type' => $address_type,
                     ':nationality' => $nationality,
                     ':state' => $state,
                     ':district' => $district,
                     ':block_number' => $block_number,
-                    ':father_name' => $father_name,
-                    ':mother_name' => $mother_name,
-                    ':grandfather' => $grandfather,
-                    ':spouse_name' => $spouse_name,
-                    ':father_in_law' => $father_in_law,
-                    ':mother_in_law' => $mother_in_law,
                     ':profile_img' => $profile_img,
                     ':category' => $category
                 ]);
-                $_SESSION['message'] = "Register successfully.";
+                $_SESSION['message'] = "Registered successfully.";
                 $_SESSION['status'] = "success";
             } else {
                 $_SESSION['message'] = "Error uploading profile image.";
@@ -105,10 +78,7 @@ if (isset($_POST['add_resident'])) {
         $_SESSION['status'] = "error";
     }
 }
-
-
 ?>
-
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -123,6 +93,7 @@ if (isset($_POST['add_resident'])) {
 
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <title>Brgy. Burol III</title>
     <link href="assets/img/bground.png" rel="icon">
@@ -255,33 +226,30 @@ if (isset($_POST['add_resident'])) {
     <div class="container">
         <header>Registration</header>
         <form method="POST" enctype="multipart/form-data">
+            <!-- First Section -->
             <div class="form first">
                 <div class="details personal">
-
+                    <h2>Personal Information</h2>
                     <div class="fields">
                         <div class="input-field">
-                            <label>Full Name</label>
-                            <input type="text" name="full_name" placeholder="Enter your name" required>
+                            <label for="full_name">Full Name</label>
+                            <input id="full_name" type="text" name="full_name" placeholder="Enter your name" required>
                         </div>
-
                         <div class="input-field">
-                            <label>Date of Birth</label>
-                            <input type="date" name="date_of_birth" placeholder="Enter birth date" required>
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input id="date_of_birth" type="date" name="date_of_birth" required>
                         </div>
-
                         <div class="input-field">
-                            <label>Email</label>
-                            <input type="text" name="email" placeholder="Enter your email" required>
+                            <label for="email">Email</label>
+                            <input id="email" type="email" name="email" placeholder="Enter your email" required>
                         </div>
-
                         <div class="input-field">
-                            <label>Mobile Number</label>
-                            <input type="number" name="mobile_number" placeholder="Enter mobile number" required>
+                            <label for="mobile_number">Mobile Number</label>
+                            <input id="mobile_number" type="number" name="mobile_number" placeholder="Enter mobile number" required>
                         </div>
-
                         <div class="input-field">
-                            <label>Gender</label>
-                            <select name="gender" required>
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
                                 <option disabled selected>Select gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -289,8 +257,8 @@ if (isset($_POST['add_resident'])) {
                             </select>
                         </div>
                         <div class="input-field">
-                            <label>Village</label>
-                            <select name="village" required>
+                            <label for="village">Village</label>
+                            <select id="village" name="village" required>
                                 <option disabled selected>Select Village</option>
                                 <option value="Accacia Homes">Accacia Homes</option>
                                 <option value="Sitio Parang">Sitio Parang</option>
@@ -298,168 +266,108 @@ if (isset($_POST['add_resident'])) {
                                 <option value="Windsor">Windsor</option>
                             </select>
                         </div>
-
                         <div class="input-field">
-                            <label>Phase</label>
-                            <input type="text" name="phase" placeholder="Enter your address">
-                        </div>
-
-                        <div class="input-field">
-                            <label>Blk & Lot</label>
-                            <input type="text" name="blk" placeholder="Blk A-1 Lot 1" required>
+                            <label for="phase">Phase</label>
+                            <input id="phase" type="text" name="phase" placeholder="Enter your address">
                         </div>
                         <div class="input-field">
-                            <label>Street</label>
-                            <input type="text" name="street" placeholder="St.">
+                            <label for="blk">Blk & Lot</label>
+                            <input id="blk" type="text" name="blk" placeholder="Blk A-1 Lot 1" required>
                         </div>
-
-
+                        <div class="input-field">
+                            <label for="street">Street</label>
+                            <input id="street" type="text" name="street" placeholder="Street name">
+                        </div>
                     </div>
                 </div>
-
-                <div class="details ID">
-                    <div class="fields">
-                        <div class="input-field">
-                            <label>ID Type</label>
-                            <input type="text" name="id_type" placeholder="Enter ID type" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>ID Number</label>
-                            <input type="number" name="id_number" placeholder="Enter ID number" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Issued Authority</label>
-                            <input type="text" name="issued_authority" placeholder="Enter issued authority" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Issued State</label>
-                            <input type="text" name="issued_state" placeholder="Enter issued state" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Issued Date</label>
-                            <input type="date" name="issued_date" placeholder="Enter your issued date" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Expiry Date</label>
-                            <input type="date" name="expiry_date" placeholder="Enter expiry date" required>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                            <div class="input-field" style="width: 100%;">
-                                <label>Profile Image</label>
-                                <input type="file" name="profile_img" accept="image/*" required>
-                            </div>
-                            <div class="input-field" style="width: 100%;">
-                                <label>Category</label>
-                                <select name="category" required>
-                                    <option disabled selected>Select category</option>
-                                    <option value="Kids">Kids</option>
-                                    <option value="Teenage">Teenage</option>
-                                    <option value="Adult">Adult</option>
-                                    <option value="PWD">PWD</option>
-                                    <option value="Senior Citizen">Senior Citizen</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-link">
-                        <span>Already have an account? <a href="login.php" class="link signup-link">Login</a></span>
-                    </div>  
-
-                    <button type="button" class="nextBtn disabled" onclick="nextForm(0)" id="nextBtn">
-                        <span class="btnText">Next</span>
-                        <i class="uil uil-navigator"></i>
-                    </button>
-                    
+                <div class="form-link">
+                    <span>Already have an account? <a href="login.php">Login</a></span>
                 </div>
+                <button type="button" class="nextBtn" onclick="nextForm(0)">
+                    <span class="btnText">Next</span>
+                    <i class="uil uil-arrow-right"></i>
+                </button>
             </div>
 
+            <!-- Second Section -->
             <div class="form second" style="display: none;">
                 <div class="details address">
-                    <span class="title">Address Details</span>
-
+                    <h2>Address Details</h2>
                     <div class="fields">
                         <div class="input-field">
-                            <label>Address Type</label>
-                            <input type="text" name="address_type" placeholder="Permanent or Temporary" required>
+                            <label for="profile_img">Profile Image</label>
+                            <input id="profile_img" type="file" name="profile_img" accept="image/*" required>
                         </div>
-
                         <div class="input-field">
-                            <label>Nationality</label>
-                            <input type="text" name="nationality" placeholder="Enter nationality" required>
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                                <option disabled selected>Select category</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Teenage">Teenage</option>
+                                <option value="Adult">Adult</option>
+                                <option value="PWD">PWD</option>
+                                <option value="Senior Citizen">Senior Citizen</option>
+                            </select>
                         </div>
-
                         <div class="input-field">
-                            <label>State</label>
-                            <input type="text" name="state" placeholder="Enter your state" required>
+                            <label for="address_type">Address Type</label>
+                            <input id="address_type" type="text" name="address_type" placeholder="Permanent or Temporary" required>
+                        </div>
+                        <div class="input-field">
+                            <label for="nationality">Nationality</label>
+                            <input id="nationality" type="text" name="nationality" placeholder="Enter nationality" required>
+                        </div>
+                        <div class="input-field">
+                            <label for="state">State</label>
+                            <input id="state" type="text" name="state" placeholder="Enter your state" required>
+                        </div>
+                        <div class="input-field">
+                            <label for="district">District</label>
+                            <input id="district" type="text" name="district" placeholder="Enter your district" required>
+                        </div>
+                        <div class="input-field">
+                            <label for="block_number">Block Number</label>
+                            <input id="block_number" type="number" name="block_number" placeholder="Enter block number" required>
                         </div>
 
-                        <div class="input-field" style="width: 100%;">
-                            <label>District</label>
-                            <input type="text" name="district" placeholder="Enter your district" required>
-                        </div>
-
-                        <div class="input-field" style="width: 100%;">
-                            <label>Block Number</label>
-                            <input type="number" name="block_number" placeholder="Enter block number" required>
-                        </div>
                     </div>
                 </div>
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="previousForm(0)" style="background-color: gray; border-color: gray;">
+                        <i class="uil uil-arrow-left" style="margin-right: 5px;"></i>
+                        <span class="btnText">Back</span>
+                    </button>
 
-                <div class="details family">
-                    <span class="title">Family Details</span>
-
-                    <div class="fields">
-                        <div class="input-field">
-                            <label>Father Name</label>
-                            <input type="text" name="father_name" placeholder="Enter father name" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Mother Name</label>
-                            <input type="text" name="mother_name" placeholder="Enter mother name" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Grandfather</label>
-                            <input type="text" name="grandfather" placeholder="Enter grandfather name" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Spouse Name</label>
-                            <input type="text" name="spouse_name" placeholder="Enter spouse name" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Father in Law</label>
-                            <input type="text" name="father_in_law" placeholder="Father in law name" required>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Mother in Law</label>
-                            <input type="text" name="mother_in_law" placeholder="Mother in law name" required>
-                        </div>
-                    </div>
-
-                    <div class="buttons">
-                        <button type="submit" name="add_resident" class="submit">
-                            <span class="btnText">Submit</span>
-                            <i class="uil uil-navigator"></i>
-                        </button>
-                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Submit
+                    </button>
                 </div>
             </div>
         </form>
-
-        <div class="form-link">
-            <span>Already have an account? <a href="login.php" class="link signup-link">Login</a></span>
-        </div>
-
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">PRIVACY POLICY</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    PRIVACY POLICY HERE!!
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="add_resident" class="btn btn-primary">
+                        <i class="uil uil-navigator"></i> Save changes</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Disagree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </form>
     <div class="waves-container">
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>
@@ -474,7 +382,10 @@ if (isset($_POST['add_resident'])) {
         </svg>
     </div>
 
+
+
     <script src="assets/js/sweetalert.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 
     <script>
@@ -487,6 +398,12 @@ if (isset($_POST['add_resident'])) {
             if (forms[index + 1]) {
                 forms[index + 1].style.display = 'block';
             }
+        }
+
+        function previousForm() {
+            const forms = document.querySelectorAll('.form');
+            forms[1].style.display = 'none'; // Hide the second form
+            forms[0].style.display = 'block'; // Show the first form
         }
 
         document.addEventListener('DOMContentLoaded', function() {

@@ -13,6 +13,10 @@
                         <input type="text" name="voter_name" class="form-control" required />
                     </div> 
                     <div class="form-group">
+                        <label>Precint No. :</label>
+                        <input type="text" name="precint_no" class="form-control" required />
+                    </div> 
+                    <div class="form-group">
                         <label>Age:</label>
                         <input type="number" name="voter_age" class="form-control" required />
                     </div>

@@ -16,6 +16,7 @@ include('main_style.php');
     <!-- header logo: style can be found in header.less -->
     <?php include "db.php"; ?>
     <?php include('header.php'); ?>
+    <?php include "../admin/functions.php" ?>
 
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <!-- Left side column. contains the logo and sidebar -->
@@ -81,7 +82,12 @@ include('main_style.php');
                                             <td>
                                                 <div style="display: flex; gap: 5px;">
                                                     <a class="btn btn-primary btn-sm" href="view_resident.php?id=<?= $userId ?>"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
-                                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editResidentModal<?= $userId ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+
+                                                    <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#editResidentModal<?php echo $row['id'] ?>" style="height: 30px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        Edit
+                                                    </button>
+                                                    <?php include "modals/edit_modal_resident.php"; ?>
+
                                                     <form method="post" action="archive.php">
                                                         <input type="hidden" name="id" value="<?= $row['id'] ?>" />
                                                         <input type="hidden" name="table" value="user" />
@@ -89,18 +95,19 @@ include('main_style.php');
                                                     </form>
 
                                                     <form method="post" action="delete.php">
-                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>" />
-                                                    <input type="hidden" name="table" value="user" />
-                                                    <button type="submit" name="archive" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
-                                                </form>
+                                                        <input type="hidden" name="id" value="<?= $row['id'] ?>" />
+                                                        <input type="hidden" name="table" value="user" />
+                                                        <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
+                                                    </form>
                                                 </div>
 
                                             </td>
                                         </tr>
-                                        <?php include "modals/edit_modal_resident.php"; ?>
+
                                     <?php } ?>
                                 </tbody>
                             </table>
+
                             <?php include "modals/delete_modal.php"; ?>
 
 
@@ -127,12 +134,17 @@ include('main_style.php');
         </aside><!-- /.right-side -->
     </div><!-- /.wrapper -->
 
+
+
     <?php include "modals/add_modal.php"; ?>
     <?php include "modals/added_notif.php"; ?>
     <?php include "modals/edit_notif.php"; ?>
     <?php include "modals/delete_notif.php"; ?>
     <?php include "modals/existing_notif.php"; ?>
     <?php include "footer.php"; ?>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <script type="text/javascript">
         $(function() {

@@ -76,8 +76,9 @@
                                 <!-- Transactions -->
                                 <div class="tab-pane" id="transactions" role="tabpanel">
                                     <?php
-                                    $payment_methods_columns = ['id', 'method_name', 'updated_at'];
-                                    displayTable($pdo, 'payment_methods', $payment_methods_columns);
+                                    
+                                    $payment_methods_columns = ['id', 'document_id'];
+                                    displayTable($pdo, 'payment_receipts', $payment_methods_columns);
                                     ?>
                                 </div>
 
