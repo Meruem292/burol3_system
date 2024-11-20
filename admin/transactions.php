@@ -97,49 +97,48 @@ include('main_style.php');
                                         } elseif ($row['status'] === 'Disapproved') {
                                             $statusClass = 'alert-danger';
                                         }
-                                        echo '
-                                    <tr>
-                                        <td><input type="checkbox" name="chk_delete[]" class="chk_delete" value="' . $row['id'] . '" /></td>
-                                        <td>' . htmlspecialchars($row['tracking_number']) . '</td> <!-- Added tracking number value -->
-                                        <td>' . htmlspecialchars($row['document_id']) . '</td>
-                                        <td>' . htmlspecialchars($row['full_name']) . '</td>
-                                        <td>' . htmlspecialchars($row['category']) . '</td>
-                                        <td><span class="badge ' . $statusClass . '">' . htmlspecialchars($row['status']) . '</span></td>
-                                        <td>
-                                            <a href="' . htmlspecialchars($row['payment_receipt_path']) . '" data-lightbox="receipt-' . htmlspecialchars($row['id']) . '">
-                                                <img src="' . htmlspecialchars($row['payment_receipt_path']) . '" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
-                                            </a>
-                                            
-                                        </td>';
                                     ?>
-                                        <td>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="chk_delete[]" class="chk_delete" value="<?= htmlspecialchars($row['id']) ?>" />
+                                            </td>
+                                            <td><?= htmlspecialchars($row['tracking_number']) ?></td>
+                                            <td><?= htmlspecialchars($row['document_id']) ?></td>
+                                            <td><?= htmlspecialchars($row['full_name']) ?></td>
+                                            <td><?= htmlspecialchars($row['category']) ?></td>
+                                            <td>
+                                                <span class="badge <?= $statusClass ?>"><?= htmlspecialchars($row['status']) ?></span>
+                                            </td>
+                                            <td>
+                                                <a href="<?= htmlspecialchars($row['payment_receipt_path']) ?>" data-lightbox="receipt-<?= htmlspecialchars($row['id']) ?>">
+                                                    <img src="<?= htmlspecialchars($row['payment_receipt_path']) ?>" alt="Payment Receipt" style="max-width: 50px; max-height: 50px;">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; gap: 5px;">
+                                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewModal<?= htmlspecialchars($row['id']) ?>">
+                                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Status
+                                                    </button>
+                                                    <form method="POST" action="archive.php" style="display: inline;">
+                                                        <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']) ?>">
+                                                        <input type="hidden" name="table" value="payment_receipts">
+                                                        <button class="btn btn-warning btn-sm" type="submit" name="archive" value="1">
+                                                            <i class="fa fa-archive"></i> Archive
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="delete.php" style="display: inline;">
+                                                        <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']) ?>">
+                                                        <input type="hidden" name="table" value="documents">
+                                                        <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this log?')">
+                                                            <i class="fa fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                            <div style="display: flex; gap: 5px;">
-                                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewModal' . $row['id'] . '">
-                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit Status
-                                                </button>
-
-                                                <form method="POST" action="archive.php">
-                                                    <!-- Input the ID of the record you want to archive -->
-                                                    <input type="hidden" name="id" value=<?= $row['id'] ?>> <!-- Change the value to the appropriate ID -->
-                                                    <input type="hidden" name="table" value="payment_receipts">
-
-                                                    <!-- Button to trigger the archive -->
-                                                    <button class="btn btn-warning btn-sm" type="submit" name="archive" value="1"><i class="fa fa-archive"></i>Archive</button>
-                                                </form>
-                                                <form method="post" action="delete.php">
-                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>" />
-                                                    <input type="hidden" name="table" value="documents" />
-                                                    <button type="submit" name="archive" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to Delete this log?')"><i class="fa fa-trash"></i> Delete</button>
-                                                </form>
-
-                                            </div>
-                                        </td>
-
-                                        </tr><?php
-
-                                                // Include the view modal with complete user details
-                                                echo '<div class="modal fade" id="viewModal' . $row['id'] . '" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                        <!-- Modal for Editing Status -->
+                                        <div class="modal fade" id="viewModal<?= htmlspecialchars($row['id']) ?>" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -149,40 +148,38 @@ include('main_style.php');
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p><strong>Tracking Number:</strong> ' . htmlspecialchars($row['tracking_number']) . '</p>
-                                                        <p><strong>Requestor\'s Name:</strong> ' . htmlspecialchars($row['full_name']) . '</p>
-                                                        <p><strong>Address:</strong> ' . htmlspecialchars($row['address']) . '</p>
-                                                        <p><strong>Age:</strong> ' . htmlspecialchars($row['age']) . '</p>
-                                                        <p><strong>Years of Residency:</strong> ' . htmlspecialchars($row['year_residency']) . '</p>
-                                                        <p><strong>Purpose:</strong> ' . htmlspecialchars($row['purpose']) . '</p>
-                                                        <p><strong>Notes:</strong> ' . htmlspecialchars($row['note']) . '</p>
-                                                        <p><strong>Document Type:</strong> ' . htmlspecialchars($row['type']) . '</p>
-                                                        <p><strong>Control Number:</strong> ' . htmlspecialchars($row['control_number']) . '</p>
-                                                       
-                                                        <!-- Status Selection -->
-                                                         <form method="POST" action="update_status.php">
-                                                        <div class="form-group">
-                                                            <label for="statusSelect' . $row['id'] . '"><strong>Status:</strong></label>
-                                                            <select class="form-control" id="statusSelect' . $row['id'] . '" name="status">
-                                                                <option value="Pending" ' . ($row['status'] == 'Pending' ? 'selected' : '') . '>Pending</option>
-                                                                <option value="Approved" ' . ($row['status'] == 'Approved' ? 'selected' : '') . '>Approved</option>
-                                                                <option value="Disapproved" ' . ($row['status'] == 'Disapproved' ? 'selected' : '') . '>Disapproved</option>
-                                                            </select>
-                                                        </div>
+                                                        <p><strong>Tracking Number:</strong> <?= htmlspecialchars($row['tracking_number']) ?></p>
+                                                        <p><strong>Requestor's Name:</strong> <?= htmlspecialchars($row['full_name']) ?></p>
+                                                        <p><strong>Address:</strong> <?= htmlspecialchars($row['address']) ?></p>
+                                                        <p><strong>Age:</strong> <?= htmlspecialchars($row['age']) ?></p>
+                                                        <p><strong>Years of Residency:</strong> <?= htmlspecialchars($row['year_residency']) ?></p>
+                                                        <p><strong>Purpose:</strong> <?= htmlspecialchars($row['purpose']) ?></p>
+                                                        <p><strong>Notes:</strong> <?= htmlspecialchars($row['note']) ?></p>
+                                                        <p><strong>Document Type:</strong> <?= htmlspecialchars($row['type']) ?></p>
+                                                        <p><strong>Control Number:</strong> <?= htmlspecialchars($row['control_number']) ?></p>
+                                                        <form method="POST" action="update_status.php">
+                                                            <div class="form-group">
+                                                                <label for="statusSelect<?= $row['id'] ?>"><strong>Status:</strong></label>
+                                                                <select class="form-control" id="statusSelect<?= $row['id'] ?>" name="status">
+                                                                    <option value="Pending" <?= $row['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
+                                                                    <option value="Approved" <?= $row['status'] === 'Approved' ? 'selected' : '' ?>>Approved</option>
+                                                                    <option value="Disapproved" <?= $row['status'] === 'Disapproved' ? 'selected' : '' ?>>Disapproved</option>
+                                                                </select>
+                                                            </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <!-- Include the document_id here -->
-                                                        
-                                                            <input type="hidden" name="document_id" value="' . $row['document_id'] . '" />
-                                                            <button type="submit" class="btn btn-primary">Update Status</button>
+                                                        <input type="hidden" name="document_id" value="<?= htmlspecialchars($row['document_id']) ?>">
+                                                        <button type="submit" class="btn btn-primary">Update Status</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>';
-                                            }
-                                                ?>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+
                                 </tbody>
                             </table>
                         </div>
