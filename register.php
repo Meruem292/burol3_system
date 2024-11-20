@@ -1,12 +1,11 @@
 <?php
-
-require "db.php";
 session_start();
-
+require_once 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $date_of_birth = $_POST['date_of_birth'];
     $email = $_POST['email'];
+    $password = $_POST['password'];
     $mobile_number = $_POST['mobile_number'];
     $gender = $_POST['gender'];
     $village = $_POST['village'];
@@ -32,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $now = new DateTime();
     $age = $now->diff($dob)->y;
 
+    // Hash the email to use as the password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
     try {
         $stmt = $pdo->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->execute([':email' => $email]);
@@ -43,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Attempt to move the uploaded file to the target directory
             if (move_uploaded_file($profile_img_tmp, $target_file)) {
-                $sql = "INSERT INTO user (full_name, date_of_birth, age, email, mobile_number, gender, village, phase, blk, street, address_type, nationality, state, district, block_number, profile_img, category) 
-                VALUES (:full_name, :date_of_birth, :age, :email, :mobile_number, :gender, :village, :phase, :blk, :street, :address_type, :nationality, :state, :district, :block_number, :profile_img, :category)";
+                $sql = "INSERT INTO user (full_name, date_of_birth, age, email, password, mobile_number, gender, village, phase, blk, street, address_type, nationality, state, district, block_number, profile_img, category) 
+                VALUES (:full_name, :date_of_birth, :age, :email, :password, :mobile_number, :gender, :village, :phase, :blk, :street, :address_type, :nationality, :state, :district, :block_number, :profile_img, :category)";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
@@ -52,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':date_of_birth' => $date_of_birth,
                     ':age' => $age,
                     ':email' => $email,
+                    ':password' => $hashed_password,
                     ':mobile_number' => $mobile_number,
                     ':gender' => $gender,
                     ':village' => $village,
@@ -79,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -244,6 +248,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input id="email" type="email" name="email" placeholder="Enter your email" required>
                         </div>
                         <div class="input-field">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="input-field">
                             <label for="mobile_number">Mobile Number</label>
                             <input id="mobile_number" type="number" name="mobile_number" placeholder="Enter mobile number" required>
                         </div>
@@ -343,7 +351,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </div>
             </div>
-        
     </div>
 
 
@@ -360,7 +367,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="modal-footer">
                     <button type="submit" name="add_resident" class="btn btn-primary">
-                        <i class="uil uil-navigator"></i> I </button>
+                        <i class="uil uil-navigator"></i> I AGREE </button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Disagree</button>
                 </div>
             </div>
