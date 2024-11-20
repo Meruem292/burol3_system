@@ -343,7 +343,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </div>
             </div>
-        </form>
+        
     </div>
 
 
@@ -360,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="modal-footer">
                     <button type="submit" name="add_resident" class="btn btn-primary">
-                        <i class="uil uil-navigator"></i> Save changes</button>
+                        <i class="uil uil-navigator"></i> I </button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Disagree</button>
                 </div>
             </div>
